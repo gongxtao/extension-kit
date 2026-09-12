@@ -4,8 +4,8 @@
 
 ## Current Objective
 
-- Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审修订）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
-- Current status: **feat-001 Harness & toolchain bootstrap 已收口（1/10）**——harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实全绿；实施未开始，下一步 = writing-plans 出 feat-002（P0 剩余）计划
+- Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审 F1–F5 + 外部 review 二轮 F6–F11）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
+- Current status: **feat-001 Harness & toolchain bootstrap 已收口（1/10）**——harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实全绿；设计经两轮 review 收口；实施未开始，下一步 = writing-plans 出 feat-002（P0 剩余）计划
 - Branch / commit: `main`（最新见 `git log --oneline -5`）
 
 ## 铁律：落地质则（用户明确要求，优先级最高）
@@ -22,6 +22,17 @@
 
 - 设计 v1（当日撤回）→ 约束变化（用户裁定 ready-svg 冻结、copy-out 零改动源仓）→ v2 修订 → 用户五问校准（账号独立/npm 包/headless/页面集成/先冻结）→ 用户逐节批准 → 自审五处修订 F1–F5（F1 content 抽象重切 / F2 /react 子路径 / F3 MeInfo 归产品 / F4 工程补漏 / F5 CDN opt-in，详见 commit `f5c22ad`）→ docs/ 归位（`79e1eee`）
 - **ready-svg 仓零改动**（冻结承诺兑现——本仓从建立至今未动过 ready-svg 任何文件）
+
+## Completed（2026-09-12 本会话：设计二轮 review 修订 F6–F11）
+
+- 外部 AI review design.md 提出 8 发现（2 阻断 + 6 精度），本会话逐条对照 ready-svg 源码验证全部成立（唯一出入：background/index.ts 实测 175 行 vs review 记 292，结论不受影响），三裁定经用户确认后落墨 design.md + README：
+  - **F6** §3 新增「入口层边界」小节 + §9 补 /content/runtime（← entrypoints/content/index.ts startContentScript）、/content/cdn（← entrypoints/background/index.ts cdnGrab 接线）溯源——修「溯源表指不到源 = 诱导从零发明」的 P1/P2 阻断缺口
+  - **F7** me-cache 泛型化落形 `createMeCache<T>({ area, validate: (v) => v is T, now? })`，条目 `{value, userId, savedAt}`（feat-005 TDD 绿靶）
+  - **F8** StorageArea 类型归宿 /io 单点定义（+ onChanged 扩展形状），handoff.ts:132 重复声明收敛
+  - **F9** capture source 接口 discover/eligibility 合一为 `isTarget`；点击复核 = runtime 再调同函数，ineligible/too_large 确定性败不走 CDN 兜底
+  - **F10** README/D4：/panel 同居 content script 上下文——仅用 /panel 仍需 content script + host 权限
+  - **F11** §5 ns 全量清单表（搬运/验收基准）+ 「逐字节兼容」限定 framework-bound 文件 + 非目标补「不仲裁多产品布局竞争」+ §6 补「构建后断言 exports 路径存在」
+- 另：仓根出现未跟踪 `.workbuddy/`（另一 AI 工作区档案，非本仓交付物）——未纳入版本控制，处置待用户定（建议 .gitignore 或删除）
 
 ## Next Session Startup
 

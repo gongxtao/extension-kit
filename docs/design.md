@@ -1,6 +1,6 @@
 # Extension Kit —— 插件通用能力框架设计（v2）
 
-> 状态：设计定稿待审（2026-09-12）。v1 于 2026-09-06 定稿后撤回——因约束变化（ready-svg 冻结）修订为本版。
+> 状态：设计定稿（2026-09-12）。v1 于 2026-09-06 定稿后撤回——因约束变化（ready-svg 冻结）修订为 v2；同日两轮 review 修订：F1–F5（自审）/ F6–F11（外部 review——entrypoint 溯源补全、me-cache 与 StorageArea 形状落墨、isTarget 合一、ns 全量清单、多产品布局红线、导出路径断言）。
 > 本仓 = 框架仓。抽离源 = ready-svg 插件（`ready-svg/extension/src/lib`，基线 commit `95d0842`，分支 `gongxtao`）。
 
 ## 1. 背景与目标
@@ -21,6 +21,7 @@ Ready SVG 插件（20/20 特性收口、待发版）沉淀了一套高质量的�
 - 不抽象多认证后端（钉死 Supabase）
 - 不做消息 RPC 框架、跨插件通信、消息版本协商
 - 不迁移 ready-svg（除非用户未来明示发起）
+- 不仲裁多产品同开的布局竞争——ns 只隔离身份（消息/存储/DOM 宿主不串台）；多面板挤压值覆写（margin-right 非叠加、各自记原值还原）与同值 z-index 叠放是源语义，跨产品调停不进框架（review2 修订）
 
 ## 2. 决策记录
 
@@ -29,7 +30,7 @@ Ready SVG 插件（20/20 特性收口、待发版）沉淀了一套高质量的�
 | D1 | 账号体系 | 各自独立 | auth 层配置驱动，无共享账号服务；保留 Supabase 特定 |
 | D2 | 仓库形态 | 独立仓库 + npm 包 | 本仓；scope `@gongxtao`（假设 GitHub 用户名同名，不同则改 package.json 一处） |
 | D3 | UI 层 | 纯 headless → **修订（review F2 用户裁定 2026-09-12）** | UI 组件不进框架不变；**逻辑 hooks 进新增 `/react` 子路径**（react 为 peerDependency，非框架依赖）——useSession 类每产品必写的编排零重写 |
-| D4 | 产品形态 | 多数要页面集成 | content 层是核心能力，但为**可选模块**——产品不 import `/content` 则不携带页面集成 |
+| D4 | 产品形态 | 多数要页面集成 | content 层是核心能力，但为**可选模块**——产品不 import `/content` 则不携带页面集成；`/panel` 同居 content script 上下文，两者都不用才无 content script / host 权限需求（review2 修订 F10） |
 | D5' | ~~先迁移再发版~~ | **ready-svg 冻结** | copy-out 抽离；ready-svg 发版与框架工作完全解耦、随时可发；代价见 §10 分叉成本 |
 | D6 | 抓取目标抽象 | 混合/未定 → 抽象接口 | `Grabber` 接口，图片抓取器首发实现，新内容类型随产品加 |
 | D7 | 抽离时序 | 混合 | 确定性核心（session/api/messaging/io/panel）一次抽完；依赖消费者校准的（具体抓取器、testing 范围）随产品 #2 JIT |
@@ -43,18 +44,25 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 | 能力 | 源文件（extension/src/lib/） | 泛化点 |
 |---|---|---|
 | 配置装配 | config.ts | 框架不持产品常量；KitConfig 注入；createKit 派生 ns 化资源 |
-| 会话层 | session-codec / auth-rest / session-store / me-cache | 近原样（已 DI）；me-cache 泛型化（最小契约 `{ userId }`）+ 键 ns 化 |
+| 会话层 | session-codec / auth-rest / session-store / me-cache | 近原样（已 DI）；me-cache 泛型化——review2 修订 F7 落形：`createMeCache<T>({ area, validate: (v: unknown) => v is T, now? })`，条目 `{value, userId, savedAt}`，`set(value, userId)`（源 `me` 字段随 F3 更名 `value`；`isMeInfo` 硬 import 换守卫注入缝，ready-svg 消费侧传 `isMeInfo` 即适配）+ 键 ns 化 |
 | 逻辑 hooks | useSession（→ /react） | 近原样（编排已 DI）；依赖 session 模块（P1 步 ⑥；review F2 裁定迁入） |
 | API 传输 | api-client 的 apiFetch 核心 | 端点函数留产品；MeInfo 完全归产品（review 修订 F3——框架只要最小身份契约 `{ userId }`，me-cache 泛型化，/api 收敛纯传输） |
 | 页内面板 | panel-host / panel-prefs | 键/消息/DOM id ns 化；panel.html 地址、宽度、边线样式可配 |
 | 页面集成 | badge-overlay / page-image / handoff | 重构为 §4 /content 子结构（Grabber 抽象） |
 | 消息协议 | 散在 handoff.ts 的 7 消息形 | defineMessages 工厂化 |
-| 工具件 | clipboard / asset-io 核 / onboarding | clipboard 原样；asset-io 产品 fetcher 注入化；onboarding → createFlagStore(ns) |
+| 工具件 | clipboard / asset-io 核 / onboarding | clipboard 原样；asset-io 产品 fetcher 注入化；onboarding → createFlagStore(ns)；**StorageArea 类型归宿 /io**（review2 修订 F8——定义在业务文件 convert-stores.ts:23 却被 me-cache/onboarding/panel-prefs 依赖：框架单点定义 get/set/remove + 含 `onChanged` 订阅的扩展形状（panel-prefs 用，源为独立注入参数），handoff.ts:132 的 HandoffStorageArea 重复声明收敛） |
 | 测试基建 | 各 test 假件模式 + e2e fixtures | 提炼假件工厂 + Playwright 助手（P3 最小集起步） |
 
 ### 留在 ready-svg（业务，永不抽）
 
 全部 React 组件（Rail/ViewHead/AccountCard/SettingsCard/Convert*/Home*/Result*/RefineDock/CtxBar/ProfilePicker/OutOfCredits/LastResult*/Dropzone）、convert-flow / optimize-flow / useConvert / useOptimize / profiles、useClaimGrant（端点话术皆业务）、use-image-handoff（消费侧）、last-result / convert-stores（业务记录形状）、API 端点定义、web 侧一切。
+
+### 入口层边界（review2 修订 F6）
+
+上表只盘 lib/；entrypoints 两文件同样二分——框架归属逻辑不登记溯源 = 诱导从零发明：
+
+- **进框架**：`entrypoints/content/index.ts` 的 `startContentScript`（357 行：初始全量 + MutationObserver 去抖重扫 + 文档级 load 捕获补扫、toast 宿主、panel toggle/show 消息消费、点击复核 ineligible 映射、handoff/CDN 装配）→ /content/runtime；`entrypoints/background/index.ts` 的 `cdnGrab` 接线（SW 扩展权限 fetch + OffscreenCanvas 转码）与 `deliverHandoff` 收口（store.set → ack；QUOTA → too_large + tab 同步告知）→ /content/cdn 与装配面。测试随码 copy-out（index.test.ts 各 473 / 312 行）。
+- **留产品壳**：WXT `defineContentScript`/`defineBackground` 包装、matches 策略、右键菜单 id/文案、快捷键与 toolbar 行为、panel.html 地址、dev 专用缝（extraHosts）。框架给可测装配函数（DOM/browser 全 DI），产品入口数行接线——example/ 即活样例。
 
 ### 运行时依赖：核心零
 
@@ -84,7 +92,9 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 │               + 扫描机制（MutationObserver/去抖重扫/文档级 load 补扫——机制归运行时，
 │                 候选判定归抓取源）
 ├── capture/    抓取源（capture source）插件：一体两面捆绑，不可拆配
-│   ├── types/  接口：discover（候选判定）/ eligibility（资格）/ extract（提取编码）
+│   ├── types/  接口：isTarget（候选判定——review2 修订 F9：扫描与点击复核同函数，
+│   │           对应源 isBadgeTarget 的两次调用，不拆 discover/eligibility）
+│   │           / extract（提取编码）
 │   │           / decodeCdn（SW 取回字节解码，可选——声明式 opt-in，F5）
 │   ├── image/  图片抓取源（page-image 泛化：尺寸阈值/canvas 重绘/webp 转码 + CDN 解码）
 │   └── (未来: selection/element/... 随产品加)
@@ -92,6 +102,7 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 ```
 
 产品装配：`contentRuntime({ captureSource: imageCapture({...阈值}), badge: {...样式} })`。
+点击链复核：runtime 在徽标点击时对同一 `isTarget` 再调（尺寸漂移防护）——不过 → `ineligible` 败因，且 ineligible / too_large 属确定性败不走 CDN 兜底（源语义随码走）。
 
 分层纪律（eslint no-restricted-imports 钉死）：config / messaging / io 为底层零依赖；session / api / panel / content 跨模块只允许 type 级引用——实际协作全走 DI 参数。
 
@@ -106,7 +117,23 @@ DOM id:      ${ns}-panel-host / ${ns}-badge-host ...
 iframe 消息: ${ns}-close-panel
 ```
 
-核心收益：**浏览器内多产品共存**——用户同时装多个产品插件，消息/存储/DOM 宿主互不串台。（ready-svg 自带代码硬编码 `rsvg-*` 前缀，语义同构；若未来迁移其 ns='rsvg'，可逐字节兼容——仅记为后门，不进计划。）
+核心收益：**浏览器内多产品共存**——用户同时装多个产品插件，消息/存储/DOM 宿主互不串台；布局竞争不在此列（§1 红线，review2 修订）。（framework-bound 文件硬编码 `rsvg-*` 前缀，语义同构；业务文件如 convert-stores 用无前缀 camelCase 键，不在兼容口径——若未来迁移其 ns='rsvg'，框架侧可逐字节兼容，仅记为后门，不进计划。）
+
+ns 化名字全量清单（review2 修订 F11——P1/P2 搬运与验收基准；实现发现遗漏随补回填此表）：
+
+| 类别 | 源名 | 框架派生 | 源所在 |
+|---|---|---|---|
+| 存储键 | rsvg-me-cache | ${ns}-me-cache | me-cache.ts |
+| | rsvg-panel-mode / rsvg-panel-width | ${ns}-panel-mode / ${ns}-panel-width | panel-prefs.ts |
+| | rsvg-image-handoff | ${ns}-image-handoff | handoff.ts |
+| | rsvg-onboarding-seen | ${ns}-onboarding-seen | onboarding.ts |
+| 消息 kind | rsvg-image-handoff / rsvg-grab / rsvg-cdn-grab / rsvg-toggle-panel / rsvg-show-panel / rsvg-handoff-consumed | ${ns}- 同后缀 | handoff.ts |
+| | rsvg-close-panel（iframe postMessage） | ${ns}-close-panel | panel-host.ts |
+| DOM id | rsvg-panel-host | ${ns}-panel-host | panel-host.ts |
+| DOM data 属性 | data-rsvg-badge / -toast / -resize / -copy | data-${ns}-* | badge-overlay / content 入口 / panel-host / clipboard |
+| Shadow 内 CSS | rsvg-spin / rsvg-shake | ${ns}-spin / ${ns}-shake | badge-overlay.ts |
+
+（rsvg-last-result 与 convertLastWidthMm / convertResume 为产品侧键，不进框架清单。）
 
 **defineMessages 工厂**（轻量，非框架）：
 
@@ -126,6 +153,7 @@ const mine = defineMessages(ns, {
 ## 6. 包工程、发布与联调
 
 - **构建**：tsdown（tsup 等价备选）；纯 ESM + 每模块 d.ts；dist 按 `src/<module>/index.ts` 分入口；exports map 九入口 + 根便捷入口（createKit + 全类型）
+- **导出路径断言**（review2 修订）：新增模块入口时 tsdown entry / package.json exports / dist 实产三者同步——init.sh 的 build 步末尾断言每条 exports 路径在 dist 存在再放行（feat-001 已实捕 .js→.mjs 不匹配一次，固化防再犯）
 - **发布**：GitHub Packages 私有（发布走 Actions GITHUB_TOKEN，安装侧每机一次性 `.npmrc` + PAT read:packages）。版本 0.x 起步，产品 #2 接入升 1.0。手工 semver + CHANGELOG.md，不上 changesets
 - **联调 DX 双模式**（README 落地）：`npm link`（框架 tsdown --watch；本框架无 React 无双实例坑）用于同日改动；GitHub Packages 钉版用于稳定开发。**真实联调验证发生在产品 #2 接入时**——此前无跨仓消费者
 - **example/ 最小示例插件**（仓内，workspace 相对引用）：P0 验证载体（WXT 构建 + Chrome 加载 + createKit 装配冒烟），兼作新产品装配参考的活样例
@@ -164,10 +192,12 @@ const mine = defineMessages(ns, {
 | /api | lib/api-client.ts（传输核） | （P1 填） |
 | /panel | lib/panel-host·panel-prefs | （P1 填） |
 | /content/badge | lib/badge-overlay.ts | （P2 填） |
-| /content/grab/image | lib/page-image.ts | （P2 填） |
+| /content/runtime | entrypoints/content/index.ts（startContentScript：扫描/去抖/补扫/toast/装配；review2 修订 F6） | （P2 填） |
+| /content/capture/image | lib/page-image.ts | （P2 填） |
+| /content/cdn | entrypoints/background/index.ts（cdnGrab SW 接线 + deliverHandoff 收口；review2 修订 F6） | （P2 填） |
 | /content/handoff | lib/handoff.ts | （P2 填） |
-| /io | lib/clipboard·asset-io·onboarding | （P1 填） |
-| /messaging | （handoff.ts 内消息形提炼） | （P1 填） |
+| /io | lib/clipboard·asset-io·onboarding + convert-stores.ts:23（仅 StorageArea 结构类型；review2 修订 F8） | （P1 填） |
+| /messaging | （handoff.ts 6 消息形 + panel-host.ts close-panel 提炼；review2 修订） | （P1 填） |
 | /react | lib/useSession.ts | （P1 填） |
 
 用途：ready-svg 侧若修了共享代码的 bug，按此表对照移植进框架（可选项，不承诺双向同步）。

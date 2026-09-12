@@ -11,7 +11,7 @@
 - **抽离源**：ready-svg 插件（`ready-svg/extension/src/lib`，基线 commit `95d0842`）——copy-out 抽离，ready-svg 仓零改动
 - **形态**：`@gongxtao/extension-kit` 单包多入口（subpath exports ×9），headless（无 UI 组件；核心零 React，逻辑 hooks 走 /react 子路径 peer React），核心运行时零依赖
 - **首个消费者**：产品 #2（需登录 web 账号 + 抓取页面内容的插件，待开工）
-- **可选模块**：`/content` 页面集成——产品不 import 则不携带（无 content script、无 host 权限需求）
+- **可选模块**：`/content` 页面集成与 `/panel` 页内面板同居 content script 上下文——两者都不 import 才无 content script、无 host 权限需求（仅用 /panel 仍需注入页面挂宿主）
 
 ## 会话启动路径（对齐 ready-svg 仓惯例；harness 已就位）
 
