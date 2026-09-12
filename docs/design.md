@@ -1,6 +1,6 @@
 # Extension Kit —— 插件通用能力框架设计（v2）
 
-> 状态：设计定稿（2026-09-12）。v1 于 2026-09-06 定稿后撤回——因约束变化（ready-svg 冻结）修订为 v2；同日两轮 review 修订：F1–F5（自审）/ F6–F11（外部 review——entrypoint 溯源补全、me-cache 与 StorageArea 形状落墨、isTarget 合一、ns 全量清单、多产品布局红线、导出路径断言）。
+> 状态：设计定稿（2026-09-12）。v1 于 2026-09-06 定稿后撤回——因约束变化（ready-svg 冻结）修订为 v2；同日多轮 review 修订：F1–F5（自审）/ F6–F11（外部 review 二轮——entrypoint 溯源补全、me-cache 与 StorageArea 形状落墨、isTarget 合一、ns 全量清单、多产品布局红线、导出路径断言）/ F12–F16（外部 review 三轮——名字与计数一致性、background 边界参数化裁定、溯源按能力归位、store 构造器参数规则、菜单 id 登记 + P0 断言口径）。
 > 本仓 = 框架仓。抽离源 = ready-svg 插件（`ready-svg/extension/src/lib`，基线 commit `95d0842`，分支 `gongxtao`）。
 
 ## 1. 背景与目标
@@ -49,8 +49,8 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 | API 传输 | api-client 的 apiFetch 核心 | 端点函数留产品；MeInfo 完全归产品（review 修订 F3——框架只要最小身份契约 `{ userId }`，me-cache 泛型化，/api 收敛纯传输） |
 | 页内面板 | panel-host / panel-prefs | 键/消息/DOM id ns 化；panel.html 地址、宽度、边线样式可配 |
 | 页面集成 | badge-overlay / page-image / handoff | 重构为 §4 /content 子结构（Grabber 抽象） |
-| 消息协议 | 散在 handoff.ts 的 7 消息形 | defineMessages 工厂化 |
-| 工具件 | clipboard / asset-io 核 / onboarding | clipboard 原样；asset-io 产品 fetcher 注入化；onboarding → createFlagStore(ns)；**StorageArea 类型归宿 /io**（review2 修订 F8——定义在业务文件 convert-stores.ts:23 却被 me-cache/onboarding/panel-prefs 依赖：框架单点定义 get/set/remove + 含 `onChanged` 订阅的扩展形状（panel-prefs 用，源为独立注入参数），handoff.ts:132 的 HandoffStorageArea 重复声明收敛） |
+| 消息协议 | 散在 handoff.ts（6 形）+ panel-host.ts（close-panel）共 7 消息形 | defineMessages 工厂化 |
+| 工具件 | clipboard / asset-io 核 / onboarding | clipboard 原样；asset-io 产品 fetcher 注入化；onboarding → createFlagStore(area, key)（源 createOnboardingStore(area)，键经 kit.key('onboarding-seen') 派生——review3 修订 F15）；**store 构造器参数风格规则**（F15：同参个数泛化保持源位置参，泛化新增注入缝（≥3 参）走对象参——对齐源 createPanelHost/createBadgeOverlay 先例，me-cache 因新增 validate 升对象参即 F7 此例）；**StorageArea 类型归宿 /io**（review2 修订 F8——定义在业务文件 convert-stores.ts:23 却被 me-cache/onboarding/panel-prefs 依赖：框架单点定义 get/set/remove + 含 `onChanged` 订阅的扩展形状（panel-prefs 用，源为独立注入参数），handoff.ts:132 的 HandoffStorageArea 重复声明收敛） |
 | 测试基建 | 各 test 假件模式 + e2e fixtures | 提炼假件工厂 + Playwright 助手（P3 最小集起步） |
 
 ### 留在 ready-svg（业务，永不抽）
@@ -61,8 +61,8 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 
 上表只盘 lib/；entrypoints 两文件同样二分——框架归属逻辑不登记溯源 = 诱导从零发明：
 
-- **进框架**：`entrypoints/content/index.ts` 的 `startContentScript`（357 行：初始全量 + MutationObserver 去抖重扫 + 文档级 load 捕获补扫、toast 宿主、panel toggle/show 消息消费、点击复核 ineligible 映射、handoff/CDN 装配）→ /content/runtime；`entrypoints/background/index.ts` 的 `cdnGrab` 接线（SW 扩展权限 fetch + OffscreenCanvas 转码）与 `deliverHandoff` 收口（store.set → ack；QUOTA → too_large + tab 同步告知）→ /content/cdn 与装配面。测试随码 copy-out（index.test.ts 各 473 / 312 行）。
-- **留产品壳**：WXT `defineContentScript`/`defineBackground` 包装、matches 策略、右键菜单 id/文案、快捷键与 toolbar 行为、panel.html 地址、dev 专用缝（extraHosts）。框架给可测装配函数（DOM/browser 全 DI），产品入口数行接线——example/ 即活样例。
+- **进框架**：`entrypoints/content/index.ts` 的 `startContentScript`（357 行：初始全量 + MutationObserver 去抖重扫 + 文档级 load 捕获补扫、toast 宿主、panel toggle/show 消息消费、点击复核 ineligible 映射、handoff/CDN 装配）→ /content/runtime；`entrypoints/background/index.ts` 的 `setupPageIntegration` **整体参数化进框架**（review3 修订 F13，裁定 a——菜单 id/文案硬编码在函数体内（:73-85）且 312 行测试正断言它们，「注册留产品壳」物理上切不开；保持函数结构 + 参数化才是 copy-out 纪律，与 content 侧 `startContentScript(deps)` 对称）：菜单 title/contexts 注入、id 缺省 `${ns}-convert` 派生，toolbar 接线与 onMessage 路由原样，内含 `deliverHandoff` 收口与 cdn 分支 → /content 装配面（background 侧）。测试随码 copy-out（index.test.ts 各 473 / 312 行；菜单断言参数化转红）。
+- **留产品壳**：WXT `defineContentScript`/`defineBackground` 包装、matches 策略、菜单文案与 contexts 的**值**（经装配参数注入——框架不持产品常量）、快捷键绑定（manifest `_execute_action`，无框架代码）、panel.html 地址、dev 专用缝（extraHosts）。框架给可测装配函数（DOM/browser 全 DI），产品入口数行接线——example/ 即活样例。
 
 ### 运行时依赖：核心零
 
@@ -113,7 +113,7 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 ```
 storage 键:  ${ns}-me-cache / ${ns}-panel-mode / ${ns}-image-handoff ...
 消息 kind:   ${ns}-toggle-panel / ${ns}-cdn-grab ...
-DOM id:      ${ns}-panel-host / ${ns}-badge-host ...
+DOM 宿主:    id ${ns}-panel-host；属性 data-${ns}-badge / -toast / -resize / -copy（徽标宿主无 id——源以 data 属性标记，review3 修订 F12）
 iframe 消息: ${ns}-close-panel
 ```
 
@@ -132,13 +132,16 @@ ns 化名字全量清单（review2 修订 F11——P1/P2 搬运与验收基准�
 | DOM id | rsvg-panel-host | ${ns}-panel-host | panel-host.ts |
 | DOM data 属性 | data-rsvg-badge / -toast / -resize / -copy | data-${ns}-* | badge-overlay / content 入口 / panel-host / clipboard |
 | Shadow 内 CSS | rsvg-spin / rsvg-shake | ${ns}-spin / ${ns}-shake | badge-overlay.ts |
+| 菜单 id | rsvg-convert | ${ns}-convert（缺省派生；title/contexts 产品注入——F13） | background 入口 |
 
-（rsvg-last-result 与 convertLastWidthMm / convertResume 为产品侧键，不进框架清单。）
+（rsvg-last-result 与 convertLastWidthMm / convertResume 为产品侧键，不进框架清单。P0 断言口径 = createKit 派生面**全表**——键/kind/id/属性/CSS 名皆纯字符串派生、不依赖模块实现，可在 P0 一次锁死 ns 契约；名字的**消费**随各模块 phase 进行为断言——review3 修订 F16。）
 
 **defineMessages 工厂**（轻量，非框架）：
 
 ```ts
-const proto = kitMessages(ns);   // 框架内置：toggle/show/close-panel、grab、cdn-grab、handoff 三件套
+const proto = kitMessages(ns);   // 框架内置 7 kind：面板三件（toggle/show/close-panel）+ 抓取两件
+                                // （grab/cdn-grab）+ handoff 双向（image-handoff / handoff-consumed）
+                                // ——ack 是返回类型不占 kind（review3 修订 F12）
 const mine = defineMessages(ns, {
   exportRequested: { payload: (v): v is ExportRequested => ... },
 });
@@ -193,9 +196,10 @@ const mine = defineMessages(ns, {
 | /panel | lib/panel-host·panel-prefs | （P1 填） |
 | /content/badge | lib/badge-overlay.ts | （P2 填） |
 | /content/runtime | entrypoints/content/index.ts（startContentScript：扫描/去抖/补扫/toast/装配；review2 修订 F6） | （P2 填） |
+| /content（background 装配面） | entrypoints/background/index.ts（setupPageIntegration 参数化整体：菜单注册/toolbar 接线/onMessage 路由；review3 修订 F13） | （P2 填） |
 | /content/capture/image | lib/page-image.ts | （P2 填） |
-| /content/cdn | entrypoints/background/index.ts（cdnGrab SW 接线 + deliverHandoff 收口；review2 修订 F6） | （P2 填） |
-| /content/handoff | lib/handoff.ts | （P2 填） |
+| /content/cdn | background 装配内 cdnGrab 分支（SW 扩展权限 fetch）+ lib/page-image.ts 的 makeOffscreenCanvas——按能力归位，review3 修订 F14 | （P2 填） |
+| /content/handoff | lib/handoff.ts（store/守卫/编解码）+ background 装配内 deliverHandoff 收口（SW 半段，两分支共用：store.set → ack；QUOTA → too_large）——review3 修订 F14 | （P2 填） |
 | /io | lib/clipboard·asset-io·onboarding + convert-stores.ts:23（仅 StorageArea 结构类型；review2 修订 F8） | （P1 填） |
 | /messaging | （handoff.ts 6 消息形 + panel-host.ts close-panel 提炼；review2 修订） | （P1 填） |
 | /react | lib/useSession.ts | （P1 填） |

@@ -4,7 +4,7 @@
 
 ## Current Objective
 
-- Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审 F1–F5 + 外部 review 二轮 F6–F11）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
+- Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审 F1–F5 + 外部 review 二轮 F6–F11 + 三轮 F12–F16）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
 - Current status: **feat-001 Harness & toolchain bootstrap 已收口（1/10）**——harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实全绿；设计经两轮 review 收口；实施未开始，下一步 = writing-plans 出 feat-002（P0 剩余）计划
 - Branch / commit: `main`（最新见 `git log --oneline -5`）
 
@@ -33,6 +33,17 @@
   - **F10** README/D4：/panel 同居 content script 上下文——仅用 /panel 仍需 content script + host 权限
   - **F11** §5 ns 全量清单表（搬运/验收基准）+ 「逐字节兼容」限定 framework-bound 文件 + 非目标补「不仲裁多产品布局竞争」+ §6 补「构建后断言 exports 路径存在」
 - 另：仓根出现未跟踪 `.workbuddy/`（另一 AI 工作区档案，非本仓交付物）——未纳入版本控制，处置待用户定（建议 .gitignore 或删除）
+
+## Completed（2026-09-12 本会话续：设计三轮 review 修订 F12–F16）
+
+- 外部 AI 复核 F6–F11：六条修订逐条回源码验证**全部吻合**（startContentScript :159 / setupPageIntegration·deliverHandoff·cdnGrab :69/:107/:64 / isBadgeTarget 两次调用 :231/:261 / 确定性败 :219 / F11 全表对源无误）；其首轮「background 292 行」系笔误（292 实为 optimize-flow.test.ts 行数，该文件 175 行）——已在 handoff 记录，未污染 design.md
+- 新提 7 发现（1 实质 + 6 一致性）验证全成立，落 F12–F16：
+  - **F12** §5 正文幽灵名 `${ns}-badge-host` 清除（源无此 id，徽标宿主走 data 属性）；§3/§9 消息形两口径统一（handoff 6 + close-panel）；kitMessages 注释改 7 kind 正确分组
+  - **F13（唯一实质裁定）** background 边界走 **(a) 整体参数化**：`setupPageIntegration` 整函数进框架（菜单 title/contexts 注入、id 缺省 `${ns}-convert`；312 行测试整体随码参数化）——(b) 拆函数留壳违铁律「保持函数结构」；产品壳留值的注入 + manifest 快捷键
+  - **F14** 溯源按能力归位：deliverHandoff → /content/handoff 行（两分支共用的 SW 半段）；cdn 行 = cdnGrab 分支 + makeOffscreenCanvas；§9 新增 /content（background 装配面）行
+  - **F15** createFlagStore(area, key) 落形（源 createOnboardingStore(area)）+ store 构造器参数风格规则（同参个数保持位置参；新增缝 ≥3 参走对象参——me-cache 即例）
+  - **F16** 菜单 id rsvg-convert 登记进 §5 清单；P0 断言口径 = createKit 派生面全表（纯字符串派生，P0 锁死 ns 契约；名字消费随模块 phase）
+- `.workbuddy/` 确认为外部 AI 的记忆区（`memory/2026-09-12.md`）——已加 .gitignore，**保留不删**
 
 ## Next Session Startup
 
