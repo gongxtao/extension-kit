@@ -6,7 +6,7 @@
 
 **Last Updated:** 2026-09-12
 **Active Feature:** feat-001 Harness & toolchain bootstrap——**已收口 done（1/10）**；下一步 = writing-plans 出 feat-002（P0 剩余：createKit + example 插件）计划
-**主线状态:** 设计定稿（docs/design.md v2 + 自审 F1–F5 + 外部 review 二轮 F6–F11 + 三轮 F12–F16 + **四轮 F17–F22 + F15 收紧**）；harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实可跑全绿；实施未开始（feat-002 起进入 P0 剩余 → P1 模块搬迁）
+**主线状态:** 设计定稿（docs/design.md v2 + 自审 F1–F5 + 外部 review 五轮 F6–F28）；harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实可跑全绿；实施未开始（feat-002 起进入 P0 剩余 → P1 模块搬迁）
 
 ## Status
 
@@ -20,7 +20,7 @@
 - [x] 依赖安装：typescript 5.9.3 / eslint 9.39.1 / typescript-eslint 8.67.0 / vitest 4.1.11 / @types/node 20.19.25 / tsdown 0.23.0（前五者与 ready-svg extension 同版本钉齐）
 - [x] **设计二轮 review（外部 AI）修订 F6–F11**（本会话，2026-09-12）——8 条发现逐条对照 ready-svg 源码验证全部成立后落墨：
   - F6 §3 新增「入口层边界」小节（entrypoints content/background 框架壳 vs 产品壳二分）+ §9 补 /content/runtime、/content/cdn 两行溯源
-  - F7 me-cache 泛型化落形：`createMeCache<T>({ area, validate, now? })`，条目 `{value, userId, savedAt}`
+  - F7 me-cache 泛型化落形：`createMeCache<T>({ area, validate, now? })`，条目 `{value, userId, savedAt}`（**签名已被 F15 收紧取代为位置参 `createMeCache<T>(area, validate, now?)`——以 design.md §3 为准**）
   - F8 StorageArea 类型归宿 /io（源定义在业务文件 convert-stores.ts:23；含 onChanged 扩展形状；handoff 重复声明收敛）
   - F9 capture source 接口合一为 `isTarget`（源 isBadgeTarget 本就被扫描/点击两次调用，双方法是发明）
   - F10 README + D4 权限说法修正（/panel 同居 content script 上下文）
@@ -41,6 +41,14 @@
   - F22 §4 生命周期与清理纪律（destroy 还原 margin / {rescan, stop} 全摘 / dispose / 菜单幂等重建）
   - F15 收紧：判据从「≥3 参走对象参」改为「源的真实分界」——源位置参一律保持（新增缝按序追加），源 deps bag 四例（createPanelHost/createSessionStore/createBadgeOverlay/createConvertStores）保持；F7 的 me-cache 签名随改 `(area, validate, now?)`
   - 小项：§9 行正名 /content/runtime（background 半段）+ §4 runtime 树注 background 半段
+- [x] **设计五轮 review（外部 AI）修订 F23–F28 + 两小项**（本会话，2026-09-12）——复核确认 F17–F22 + F15 收紧全部落准；新提 6 缺口逐条验证成立：
+  - F23 §3 产品常量对账单 + 判据「框架可持通用视觉默认值（可覆盖），产品文案与品牌资产一律注入零缺省」——7 处逐行对账（sourceOf/badgeCornerFor/isSource 守卫/回退文案/LOGO_PATH+#f8b018/config 三常量/aria-label+TOAST）
+  - F24 F17 泛化扩双通道：cdn-grab 同携 source（CdnGrabMessage/rescueViaCdn）+ isSource 两处守卫注入缝
+  - F25 Grabber 正名废弃，统一「抓取源（capture source）」（D6/§3/§8 三处）
+  - F26 §4 CaptureSource 接口契约（isTarget/extract/decodeCdn?{makeCanvas}——形状源自 page-image 导出面）+ runtime 调用时序 + 四注入点
+  - F27 §4 页内注入纪律独立条款（Shadow DOM 隔离/:host all:initial、不改页面 DOM 唯一例外 squeeze、data-${ns}-* 标记 + z-index 2147483647 同值后到压制）
+  - F28 §1 非目标补「仅 Chromium MV3（Chrome ≥123 随源钉）」
+  - 小项①：本文件与 session-handoff 的 F7 陈旧签名补「已被 F15 取代」标注；小项②：F6 小节「全 DI」限定（panel-host 直用全局 document/window，非全 DI）
 
 ### What's In Progress
 
@@ -76,6 +84,10 @@
 - **四轮 review 两裁定**（2026-09-12，依据铁律拍定，已在回复中向用户标明可否决）
   - F15 收紧选「一律保持源位置参」（否「含缝一律对象参」——后者要重写源里 5 个位置参构造器签名，违「保持函数结构」；判据换成源的真实分界 deps bag vs 单主体）
   - F19 配置三层表 + 升层规则（KitConfig 仅 ns；升层 = ≥2 模块消费或全局唯一——收拢 F13/§3/§4 已散落裁定，无新发明）
+- **五轮 review 三裁定**（2026-09-12，依据铁律/先例拍定，已向用户标明可否决）
+  - F26 时点 = 现在钉形（否「留 P2 实现反推」——D6 核心扩展点留到实现期正是铁律要防的自创 API；F20 已立「核心 API 先钉形」先例）
+  - F27 强度 = 独立条款（否「并进 F22 一行」——约束对象不同：F22 进出契约 vs F27 页内静态纪律，产品自行注入 DOM 时要能查到）
+  - F28 = 同意加非目标，版本下限跟源钉 123（未验证不承诺，需要时另立裁定）
 
 ## Files Modified This Session
 
@@ -87,7 +99,7 @@
 - `src/index.ts` / `src/index.test.ts` - 新建（占位根入口 + smoke 测试）
 - `.gitignore` / `.nvmrc` - 新建
 - `README.md` - 启动路径同步（harness 三件已就位）；本会话另修 /panel 权限说法（F10）
-- `docs/design.md` - 本会话二轮 review 修订 F6–F11（12 处编辑）+ 三轮 F12–F16（8 处）+ 四轮 F17–F22 + F15 收紧（9 处：头部 / §3 会话层·页面集成·工具件 / §4 runtime 树+配置三层表+生命周期纪律 / §5 createKit 契约 / §6 manifest 映射表 / §9 四行）
+- `docs/design.md` - 本会话二轮 F6–F11（12 处编辑）+ 三轮 F12–F16（8 处）+ 四轮 F17–F22+F15 收紧（9 处）+ 五轮 F23–F28（9 处：头部 / §1 F28 / D6·§3 页面集成 F25+F24 / §3 产品常量对账单 F23 / F6 全 DI 限定 / §4 CaptureSource 契约 F26 + 页内注入纪律 F27 / §8 P2 行）
 - `.gitignore` - 加 `.workbuddy/`（外部 AI 记忆区，保留不删）
 
 ## Evidence of Completion

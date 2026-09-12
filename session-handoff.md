@@ -4,7 +4,7 @@
 
 ## Current Objective
 
-- Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审 F1–F5 + 外部 review 二至四轮 F6–F22）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
+- Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审 F1–F5 + 外部 review 五轮 F6–F28）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
 - Current status: **feat-001 Harness & toolchain bootstrap 已收口（1/10）**——harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实全绿；设计经两轮 review 收口；实施未开始，下一步 = writing-plans 出 feat-002（P0 剩余）计划
 - Branch / commit: `main`（最新见 `git log --oneline -5`）
 
@@ -27,7 +27,7 @@
 
 - 外部 AI review design.md 提出 8 发现（2 阻断 + 6 精度），本会话逐条对照 ready-svg 源码验证全部成立（唯一出入：background/index.ts 实测 175 行 vs review 记 292，结论不受影响），三裁定经用户确认后落墨 design.md + README：
   - **F6** §3 新增「入口层边界」小节 + §9 补 /content/runtime（← entrypoints/content/index.ts startContentScript）、/content/cdn（← entrypoints/background/index.ts cdnGrab 接线）溯源——修「溯源表指不到源 = 诱导从零发明」的 P1/P2 阻断缺口
-  - **F7** me-cache 泛型化落形 `createMeCache<T>({ area, validate: (v) => v is T, now? })`，条目 `{value, userId, savedAt}`（feat-005 TDD 绿靶）
+  - **F7** me-cache 泛型化落形 `createMeCache<T>({ area, validate: (v) => v is T, now? })`，条目 `{value, userId, savedAt}`（feat-005 TDD 绿靶；**签名已被 F15 收紧为位置参 `(area, validate, now?)`——以 design.md §3 为准**）
   - **F8** StorageArea 类型归宿 /io 单点定义（+ onChanged 扩展形状），handoff.ts:132 重复声明收敛
   - **F9** capture source 接口 discover/eligibility 合一为 `isTarget`；点击复核 = runtime 再调同函数，ineligible/too_large 确定性败不走 CDN 兜底
   - **F10** README/D4：/panel 同居 content script 上下文——仅用 /panel 仍需 content script + host 权限
@@ -56,6 +56,17 @@
   - **F22** §4 生命周期与清理纪律（destroy 还原 margin / {rescan, stop} / dispose / 菜单幂等重建）
   - **F15 收紧**（两方向裁定之一，选「保持源位置参」）：判据 = 源的真实分界（deps bag vs 单主体），不数参数个数；F7 me-cache 签名随改 `createMeCache<T>(area, validate, now?)`
   - 小项：§9 行正名 /content/runtime（background 半段）；§4 runtime 树补 background 半段注记
+
+## Completed（2026-09-12 本会话续三：设计五轮 review 修订 F23–F28）
+
+- 外部 AI 四度复核：确认 F17–F22 + F15 收紧全部落准（六派生面 ↔ §5 清单无遗漏类别、manifest 逐项对 wxt.config）；新提 6 缺口 + 2 状态文件小项，逐条验证成立后落墨：
+  - **F23** §3 产品常量对账单（7 处）+ 判据：框架可持通用视觉默认值（可覆盖）；产品文案与品牌资产（站点表/logo path/回退文案/aria-label）一律注入零缺省
+  - **F24** F17 泛化扩双通道：handoff + cdn-grab 都携 source，isSource 两处守卫同开注入缝
+  - **F25** Grabber 旧名废弃，统一「抓取源（capture source）」（D6/§3/§8）
+  - **F26** §4 **CaptureSource 接口契约**：`isTarget(info)` / `extract(input, deps?)` / `decodeCdn?: { makeCanvas() }`（声明式 opt-in）+ runtime 调用时序 + 四注入点（sourceOf/cornerFor/回退文案/阈值）——P2 落地依据，形状源自 page-image 导出面
+  - **F27** §4 页内注入纪律（Shadow DOM 隔离 + inline 自包含；不改页面 DOM 唯一例外 squeeze；data-${ns}-* 标记 + z-index 同值后到压制）
+  - **F28** §1 非目标：仅 Chromium MV3（Chrome ≥123 随源钉；OffscreenCanvas/storage.session/lastError 皆 Chromium 形态）
+  - 小项：两状态文件的 F7 陈旧签名补「已被 F15 取代」标注；F6 小节「全 DI」限定（panel-host 直用全局 document/window）
 
 ## Next Session Startup
 
