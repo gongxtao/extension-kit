@@ -1,6 +1,6 @@
 # Extension Kit —— 插件通用能力框架设计（v2）
 
-> 状态：设计定稿（2026-09-12）。v1 于 2026-09-06 定稿后撤回——因约束变化（ready-svg 冻结）修订为 v2；同日多轮 review 修订：F1–F5（自审）/ F6–F11（外部 review 二轮——entrypoint 溯源补全、me-cache 与 StorageArea 形状落墨、isTarget 合一、ns 全量清单、多产品布局红线、导出路径断言）/ F12–F16（外部 review 三轮——名字与计数一致性、background 边界参数化裁定、溯源按能力归位、store 构造器参数规则、菜单 id 登记 + P0 断言口径）。
+> 状态：设计定稿（2026-09-12）。v1 于 2026-09-06 定稿后撤回——因约束变化（ready-svg 冻结）修订为 v2；同日多轮 review 修订：F1–F5（自审）/ F6–F11（二轮——entrypoint 溯源补全、me-cache 与 StorageArea 形状落墨、isTarget 合一、ns 全量清单、多产品布局红线、导出路径断言）/ F12–F16（三轮——名字计数一致性、background 边界参数化、溯源按能力归位、store 参数规则、菜单 id 登记）/ F17–F22 + F15 收紧（四轮——sourceOf 归产品、通道上限归位、配置三层规则、createKit 契约与例外登记、manifest 映射表、生命周期纪律）。
 > 本仓 = 框架仓。抽离源 = ready-svg 插件（`ready-svg/extension/src/lib`，基线 commit `95d0842`，分支 `gongxtao`）。
 
 ## 1. 背景与目标
@@ -44,13 +44,13 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 | 能力 | 源文件（extension/src/lib/） | 泛化点 |
 |---|---|---|
 | 配置装配 | config.ts | 框架不持产品常量；KitConfig 注入；createKit 派生 ns 化资源 |
-| 会话层 | session-codec / auth-rest / session-store / me-cache | 近原样（已 DI）；me-cache 泛型化——review2 修订 F7 落形：`createMeCache<T>({ area, validate: (v: unknown) => v is T, now? })`，条目 `{value, userId, savedAt}`，`set(value, userId)`（源 `me` 字段随 F3 更名 `value`；`isMeInfo` 硬 import 换守卫注入缝，ready-svg 消费侧传 `isMeInfo` 即适配）+ 键 ns 化 |
+| 会话层 | session-codec / auth-rest / session-store / me-cache | 近原样（已 DI）；me-cache 泛型化——F7 落形（F15 收紧后签名随源位置参）：`createMeCache<T>(area, validate: (v: unknown) => v is T, now?)`，条目 `{value, userId, savedAt}`，`set(value, userId)`（源 `me` 字段随 F3 更名 `value`；`isMeInfo` 硬 import 换守卫注入缝，ready-svg 消费侧传 `isMeInfo` 即适配）+ 键 ns 化 |
 | 逻辑 hooks | useSession（→ /react） | 近原样（编排已 DI）；依赖 session 模块（P1 步 ⑥；review F2 裁定迁入） |
 | API 传输 | api-client 的 apiFetch 核心 | 端点函数留产品；MeInfo 完全归产品（review 修订 F3——框架只要最小身份契约 `{ userId }`，me-cache 泛型化，/api 收敛纯传输） |
 | 页内面板 | panel-host / panel-prefs | 键/消息/DOM id ns 化；panel.html 地址、宽度、边线样式可配 |
-| 页面集成 | badge-overlay / page-image / handoff | 重构为 §4 /content 子结构（Grabber 抽象） |
+| 页面集成 | badge-overlay / page-image / handoff | 重构为 §4 /content 子结构（Grabber 抽象）；**sourceOf 站点映射与 ImageSource 值域归产品**（review4 修订 F17——源 page-image.ts:57-66 硬编码 chatgpt/gemini 域为纯业务，不修则产品 #2 照抄站点名；框架零站点知识，通道只走 §5 metadata 透传 + `cornerFor(source)` 泛型吃产品值域，映射表经装配注入） |
 | 消息协议 | 散在 handoff.ts（6 形）+ panel-host.ts（close-panel）共 7 消息形 | defineMessages 工厂化 |
-| 工具件 | clipboard / asset-io 核 / onboarding | clipboard 原样；asset-io 产品 fetcher 注入化；onboarding → createFlagStore(area, key)（源 createOnboardingStore(area)，键经 kit.key('onboarding-seen') 派生——review3 修订 F15）；**store 构造器参数风格规则**（F15：同参个数泛化保持源位置参，泛化新增注入缝（≥3 参）走对象参——对齐源 createPanelHost/createBadgeOverlay 先例，me-cache 因新增 validate 升对象参即 F7 此例）；**StorageArea 类型归宿 /io**（review2 修订 F8——定义在业务文件 convert-stores.ts:23 却被 me-cache/onboarding/panel-prefs 依赖：框架单点定义 get/set/remove + 含 `onChanged` 订阅的扩展形状（panel-prefs 用，源为独立注入参数），handoff.ts:132 的 HandoffStorageArea 重复声明收敛） |
+| 工具件 | clipboard / asset-io 核 / onboarding | clipboard 原样；asset-io 产品 fetcher 注入化；onboarding → createFlagStore(area, key)（源 createOnboardingStore(area)，键经 kit.key('onboarding-seen') 派生——review3 修订 F15）；**store 构造器参数风格规则**（F15，四轮收紧——判据 = 源的真实分界而非参数个数：源位置参（单主体 + 注入缝）一律保持位置参、新增缝按序追加（me-cache 即 `(area, validate, now?)`）；源 deps bag（createPanelHost / createSessionStore / createBadgeOverlay / createConvertStores）保持 deps bag）；**StorageArea 类型归宿 /io**（review2 修订 F8——定义在业务文件 convert-stores.ts:23 却被 me-cache/onboarding/panel-prefs 依赖：框架单点定义 get/set/remove + 含 `onChanged` 订阅的扩展形状（panel-prefs 用，源为独立注入参数），handoff.ts:132 的 HandoffStorageArea 重复声明收敛） |
 | 测试基建 | 各 test 假件模式 + e2e fixtures | 提炼假件工厂 + Playwright 助手（P3 最小集起步） |
 
 ### 留在 ready-svg（业务，永不抽）
@@ -91,6 +91,7 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 │               + storage.session 交接通道（载荷 metadata 透传）
 │               + 扫描机制（MutationObserver/去抖重扫/文档级 load 补扫——机制归运行时，
 │                 候选判定归抓取源）
+│               + background 半段（setupPageIntegration 参数化：菜单/toolbar/路由——F13）
 ├── capture/    抓取源（capture source）插件：一体两面捆绑，不可拆配
 │   ├── types/  接口：isTarget（候选判定——review2 修订 F9：扫描与点击复核同函数，
 │   │           对应源 isBadgeTarget 的两次调用，不拆 discover/eligibility）
@@ -105,6 +106,16 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 点击链复核：runtime 在徽标点击时对同一 `isTarget` 再调（尺寸漂移防护）——不过 → `ineligible` 败因，且 ineligible / too_large 属确定性败不走 CDN 兜底（源语义随码走）。
 
 分层纪律（eslint no-restricted-imports 钉死）：config / messaging / io 为底层零依赖；session / api / panel / content 跨模块只允许 type 级引用——实际协作全走 DI 参数。
+
+**配置三层归属（review4 修订 F19）**——什么进 KitConfig、什么走模块装配参数、什么框架永不持：
+
+| 层 | 归宿 | 现有成员 |
+|---|---|---|
+| KitConfig | 跨模块全局（createKit 入参）；升层规则：被 ≥2 模块消费或须全局唯一才进 | 当前仅 `namespace` |
+| 模块装配参数 | 模块构造器/装配函数入参，模块内可配 | panel.html 地址/宽度/边线、菜单 title/contexts（F13）、徽标样式/角位、抓取阈值、sourceOf 映射（F17）、产品 fetcher |
+| 产品常量 | 框架永不持（§3 铁则） | 站点表值、文案、API 端点、MeInfo 形状 |
+
+**生命周期与清理纪律**（review4 修订 F22——模块进出契约，源内散落纪律上升为条款）：panel `destroy()` 必还原 margin 原值（记谁还谁）；`startContentScript` 返 `{rescan, stop}`——observer / load 捕获 / runtime 监听 / 徽标全摘；badge `dispose()`；菜单注册 removeAll→rebuild 幂等（SW 每次唤醒重建，duplicate id 经 lastError 回调显式消费不炸）。
 
 ## 5. 命名空间与消息协议
 
@@ -136,6 +147,22 @@ ns 化名字全量清单（review2 修订 F11——P1/P2 搬运与验收基准�
 
 （rsvg-last-result 与 convertLastWidthMm / convertResume 为产品侧键，不进框架清单。P0 断言口径 = createKit 派生面**全表**——键/kind/id/属性/CSS 名皆纯字符串派生、不依赖模块实现，可在 P0 一次锁死 ns 契约；名字的**消费**随各模块 phase 进行为断言——review3 修订 F16。）
 
+**createKit 接口契约**（review4 修订 F20——P0 断言的依据，先于 feat-002 钉死）：
+
+```ts
+interface KitConfig { namespace: string }   // [a-z0-9]+ 单段（§5）
+interface Kit {
+  key(suffix: string): string        // 存储键 `${ns}-${suffix}`
+  kind(suffix: string): string       // 消息 kind `${ns}-${suffix}`
+  domId(suffix: string): string      // DOM id `${ns}-${suffix}`
+  dataAttr(suffix: string): string   // DOM 属性 `data-${ns}-${suffix}`
+  cssName(suffix: string): string    // Shadow CSS/动画名 `${ns}-${suffix}`
+  menuId(suffix: string): string     // 菜单 id（装配层缺省 'convert'，F13）
+}
+```
+
+**唯一无源对应物的抽象，显式登记为例外**：源是 config.ts 单例装配 + 各文件散落的 `rsvg-` 前缀字面量，无集中派生函数。约束三则：纯字符串派生、无状态无新运行时概念；`ns='rsvg'` 时输出与源字面量逐字节等价（上文全量清单即其测试规格）；新派生类别须先回本节扩契约，不得散落。
+
 **defineMessages 工厂**（轻量，非框架）：
 
 ```ts
@@ -165,6 +192,16 @@ const mine = defineMessages(ns, {
 ### 新产品起步路径（本设计第一目标，无脚手架生成器）
 
 新建 WXT 项目 → `npm i @gongxtao/extension-kit` → 按 README 装配指南接线（manifest 模板 + 入口三件 + createKit + 消息装配）→ 直接写业务视图。装配指南内嵌可直接复制的 manifest/入口骨架片段（提炼自 example/）。
+
+**manifest 必备声明映射**（review4 修订 F21——装配指南骨架；F13 起 contextMenus 成框架必需权限，此类耦合登记于此）：
+
+| 框架能力 | manifest 必备 | 源依据 |
+|---|---|---|
+| /panel | `web_accessible_resources`：panel.html + chunks/* + assets/* + icons/*（+ matches） | R91——漏一项 iframe 白屏（静默无报错），源 manifest.test 锁 |
+| /session | `permissions`: cookies（+ storage） | session-store cookie 读写 |
+| /content + cdn 兜底 | `host_permissions`: \<all_urls\>（产品可收窄） | R53 SW 免 CORS 取字节 |
+| background 装配（F13 起） | `permissions`: contextMenus | setupPageIntegration 菜单注册 |
+| /io asset-io | `permissions`: downloads | 资产导出 chrome.downloads |
 
 ## 7. 测试策略
 
@@ -196,10 +233,10 @@ const mine = defineMessages(ns, {
 | /panel | lib/panel-host·panel-prefs | （P1 填） |
 | /content/badge | lib/badge-overlay.ts | （P2 填） |
 | /content/runtime | entrypoints/content/index.ts（startContentScript：扫描/去抖/补扫/toast/装配；review2 修订 F6） | （P2 填） |
-| /content（background 装配面） | entrypoints/background/index.ts（setupPageIntegration 参数化整体：菜单注册/toolbar 接线/onMessage 路由；review3 修订 F13） | （P2 填） |
-| /content/capture/image | lib/page-image.ts | （P2 填） |
+| /content/runtime（background 半段） | entrypoints/background/index.ts（setupPageIntegration 参数化整体：菜单注册/toolbar 接线/onMessage 路由；review3 修订 F13、四轮正名） | （P2 填） |
+| /content/capture/image | lib/page-image.ts（GrabFailReason 六值跨层标注：taint/decode=canvas 路、too_large=通道（F18）、ineligible=点击复核、network/unsupported=抓取链；测试 231 行按能力拆分随 F14/F18 归位——review4 修订） | （P2 填） |
 | /content/cdn | background 装配内 cdnGrab 分支（SW 扩展权限 fetch）+ lib/page-image.ts 的 makeOffscreenCanvas——按能力归位，review3 修订 F14 | （P2 填） |
-| /content/handoff | lib/handoff.ts（store/守卫/编解码）+ background 装配内 deliverHandoff 收口（SW 半段，两分支共用：store.set → ack；QUOTA → too_large）——review3 修订 F14 | （P2 填） |
+| /content/handoff | lib/handoff.ts（store/守卫/编解码）+ background 装配内 deliverHandoff 收口（SW 半段，两分支共用：store.set → ack；QUOTA → too_large）+ HANDOFF_MAX_BYTES 通道上限（源自 page-image.ts:21，随通道走——产品换内容类型时门不丢；review4 修订 F18）——review3 修订 F14 | （P2 填） |
 | /io | lib/clipboard·asset-io·onboarding + convert-stores.ts:23（仅 StorageArea 结构类型；review2 修订 F8） | （P1 填） |
 | /messaging | （handoff.ts 6 消息形 + panel-host.ts close-panel 提炼；review2 修订） | （P1 填） |
 | /react | lib/useSession.ts | （P1 填） |

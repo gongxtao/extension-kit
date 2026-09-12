@@ -6,7 +6,7 @@
 
 **Last Updated:** 2026-09-12
 **Active Feature:** feat-001 Harness & toolchain bootstrap——**已收口 done（1/10）**；下一步 = writing-plans 出 feat-002（P0 剩余：createKit + example 插件）计划
-**主线状态:** 设计定稿（docs/design.md v2 + 自审 F1–F5 + 外部 review 二轮 F6–F11 + **三轮 F12–F16**）；harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实可跑全绿；实施未开始（feat-002 起进入 P0 剩余 → P1 模块搬迁）
+**主线状态:** 设计定稿（docs/design.md v2 + 自审 F1–F5 + 外部 review 二轮 F6–F11 + 三轮 F12–F16 + **四轮 F17–F22 + F15 收紧**）；harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实可跑全绿；实施未开始（feat-002 起进入 P0 剩余 → P1 模块搬迁）
 
 ## Status
 
@@ -32,6 +32,15 @@
   - F15 createFlagStore(area, key) 落形 + store 构造器参数风格规则（同参个数保持位置参；新增注入缝 ≥3 参走对象参，对齐源 createPanelHost/createBadgeOverlay 先例）
   - F16 菜单 id rsvg-convert 登记进 §5 清单 + P0 断言口径 = createKit 派生面全表（纯字符串派生不依赖模块实现，P0 一次锁死 ns 契约）
 - [x] `.workbuddy/`（外部 AI 记忆区）加入 .gitignore——保留不删
+- [x] **设计四轮 review（外部 AI）修订 F17–F22 + F15 判据收紧**（本会话，2026-09-12）——复核确认 F12–F16 全部落准后，新提 6 设计缺口 + 2 小项，逐条验证全成立：
+  - F17 sourceOf 站点映射与 ImageSource 值域归产品（源 page-image.ts:57-66 硬编码两域为纯业务；框架零站点知识，走 §5 metadata 透传 + cornerFor 泛型，映射经装配注入）
+  - F18 HANDOFF_MAX_BYTES（源 page-image.ts:21，交接通道上限）按 F14 能力归位随 /content/handoff 走；GrabFailReason 六值跨层标注；page-image.test 231 行按能力拆分
+  - F19 §4 配置三层归属表（KitConfig 跨模块全局·当前仅 ns / 模块装配参数 / 产品常量永不持）+ 升层规则（≥2 模块消费或全局唯一才升 KitConfig）
+  - F20 §5 createKit 接口契约钉死（key/kind/domId/dataAttr/cssName/menuId 六派生面）+ **唯一无源对应物抽象的显式例外登记**（约束：纯字符串派生、ns='rsvg' 逐字节等价、新类别须回设计扩契约）
+  - F21 §6 manifest 必备声明映射表（/panel WAR 漏一项 iframe 白屏·源有 manifest.test 锁 / cookies / host_permissions / contextMenus·F13 起框架必需 / downloads）
+  - F22 §4 生命周期与清理纪律（destroy 还原 margin / {rescan, stop} 全摘 / dispose / 菜单幂等重建）
+  - F15 收紧：判据从「≥3 参走对象参」改为「源的真实分界」——源位置参一律保持（新增缝按序追加），源 deps bag 四例（createPanelHost/createSessionStore/createBadgeOverlay/createConvertStores）保持；F7 的 me-cache 签名随改 `(area, validate, now?)`
+  - 小项：§9 行正名 /content/runtime（background 半段）+ §4 runtime 树注 background 半段
 
 ### What's In Progress
 
@@ -64,6 +73,9 @@
 - **三轮 review F13：background 边界走 (a) 整体参数化**（2026-09-12，我裁定、用户转发授权）
   - Context: setupPageIntegration 函数体内硬编码菜单 id/文案 + 312 行测试断言之，与 F6「注册留产品壳」自相矛盾
   - Alternatives: (b) 拆函数留壳（否——拆散函数结构 + 拆测试矩阵正是铁律禁止的重写式泛化；(a) 与 content 侧 startContentScript(deps) 对称且产品常量经注入兑现「框架不持产品常量」）
+- **四轮 review 两裁定**（2026-09-12，依据铁律拍定，已在回复中向用户标明可否决）
+  - F15 收紧选「一律保持源位置参」（否「含缝一律对象参」——后者要重写源里 5 个位置参构造器签名，违「保持函数结构」；判据换成源的真实分界 deps bag vs 单主体）
+  - F19 配置三层表 + 升层规则（KitConfig 仅 ns；升层 = ≥2 模块消费或全局唯一——收拢 F13/§3/§4 已散落裁定，无新发明）
 
 ## Files Modified This Session
 
@@ -75,7 +87,7 @@
 - `src/index.ts` / `src/index.test.ts` - 新建（占位根入口 + smoke 测试）
 - `.gitignore` / `.nvmrc` - 新建
 - `README.md` - 启动路径同步（harness 三件已就位）；本会话另修 /panel 权限说法（F10）
-- `docs/design.md` - 本会话二轮 review 修订 F6–F11（12 处编辑：头部状态 / §1 红线 / D4 / §3 两行+新小节 / §4 capture types+复核语义 / §5 清单表+兼容限定 / §6 断言 / §9 表扩 12 行）+ 三轮 review 修订 F12–F16（8 处：头部 / §3 消息协议+工具件 / §5 正文宿主名+kitMessages 注释+清单表菜单行与 P0 口径 / F6 小节 background 重写 / §9 三行）
+- `docs/design.md` - 本会话二轮 review 修订 F6–F11（12 处编辑）+ 三轮 F12–F16（8 处）+ 四轮 F17–F22 + F15 收紧（9 处：头部 / §3 会话层·页面集成·工具件 / §4 runtime 树+配置三层表+生命周期纪律 / §5 createKit 契约 / §6 manifest 映射表 / §9 四行）
 - `.gitignore` - 加 `.workbuddy/`（外部 AI 记忆区，保留不删）
 
 ## Evidence of Completion
@@ -90,4 +102,4 @@
 ## Notes for Next Session
 
 - 落地质则铁律见 CLAUDE.md「落地质则」节 + session-handoff.md——**这是本仓最高优先级约束**（用户原话：框架一定要能落地，不能天马行空）
-- createKit 是 feat-002 的 TDD 起点：ns 派生断言先红——**验收基准直接用 design.md §5 ns 全量清单表**（F11，勿再回源仓 grep 对账）
+- createKit 是 feat-002 的 TDD 起点：接口契约已钉死在 **design.md §5 createKit 契约（F20）**——六派生面（key/kind/domId/dataAttr/cssName/menuId）+ 全量清单表（F11）即断言规格，勿再回源仓 grep 对账、勿自 invent 方法名

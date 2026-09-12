@@ -4,7 +4,7 @@
 
 ## Current Objective
 
-- Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审 F1–F5 + 外部 review 二轮 F6–F11 + 三轮 F12–F16）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
+- Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审 F1–F5 + 外部 review 二至四轮 F6–F22）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
 - Current status: **feat-001 Harness & toolchain bootstrap 已收口（1/10）**——harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实全绿；设计经两轮 review 收口；实施未开始，下一步 = writing-plans 出 feat-002（P0 剩余）计划
 - Branch / commit: `main`（最新见 `git log --oneline -5`）
 
@@ -44,6 +44,18 @@
   - **F15** createFlagStore(area, key) 落形（源 createOnboardingStore(area)）+ store 构造器参数风格规则（同参个数保持位置参；新增缝 ≥3 参走对象参——me-cache 即例）
   - **F16** 菜单 id rsvg-convert 登记进 §5 清单；P0 断言口径 = createKit 派生面全表（纯字符串派生，P0 锁死 ns 契约；名字消费随模块 phase）
 - `.workbuddy/` 确认为外部 AI 的记忆区（`memory/2026-09-12.md`）——已加 .gitignore，**保留不删**
+
+## Completed（2026-09-12 本会话续二：设计四轮 review 修订 F17–F22 + F15 收紧）
+
+- 外部 AI 三度复核：确认 F12–F16 全部落准（其「292 行」笔误已自纠——292 实为 optimize-flow.test.ts）；重心转向框架级审查，新提 6 缺口 + 2 小项，逐条验证全成立后落墨：
+  - **F17** sourceOf 站点映射 + ImageSource 值域归产品（框架零站点知识；§5 metadata 透传 + cornerFor 泛型）——不修则产品 #2 照抄 ready-svg 站点名
+  - **F18** HANDOFF_MAX_BYTES 通道上限随 /content/handoff 走（源在 page-image.ts:21 但属通道能力）；GrabFailReason 六值跨层标注
+  - **F19** §4 配置三层归属表：KitConfig（跨模块全局，当前仅 ns，升层 = ≥2 模块消费或全局唯一）/ 模块装配参数 / 产品常量永不持
+  - **F20** §5 createKit 接口契约（key/kind/domId/dataAttr/cssName/menuId）+ 唯一无源对应物抽象的显式例外登记（纯字符串派生 / ns='rsvg' 逐字节等价 / 新类别回设计扩契约）——feat-002 的 API 依据
+  - **F21** §6 manifest 必备声明映射表（WAR 漏一项 iframe 白屏——/panel 静默故障源，源 manifest.test 锁；contextMenus 自 F13 起为框架必需权限）
+  - **F22** §4 生命周期与清理纪律（destroy 还原 margin / {rescan, stop} / dispose / 菜单幂等重建）
+  - **F15 收紧**（两方向裁定之一，选「保持源位置参」）：判据 = 源的真实分界（deps bag vs 单主体），不数参数个数；F7 me-cache 签名随改 `createMeCache<T>(area, validate, now?)`
+  - 小项：§9 行正名 /content/runtime（background 半段）；§4 runtime 树补 background 半段注记
 
 ## Next Session Startup
 
