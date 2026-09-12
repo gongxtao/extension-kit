@@ -16,6 +16,6 @@
 ## 会话启动路径（对齐 ready-svg 仓惯例）
 
 1. `pwd && git status --short --branch` 确认目录与分支
-2. 读 `docs/design.md`（本仓真源文档）+ `progress.md`（会话日志）+ `feature_list.json`（特性状态）
-3. Run `./init.sh`（P0 建立后；lint → unit → build，fail-fast）
+2. 读 `README.md`（本文件）→ `docs/design.md`（真源文档）→ `session-handoff.md`（会话入口，含落地质则铁律）
+3. `progress.md` / `feature_list.json` / `./init.sh` 为 P0 交付物（建立后加入本路径）
 4. `git log --oneline -5` 对齐最近变更
