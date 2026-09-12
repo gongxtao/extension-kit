@@ -4,7 +4,7 @@
 
 ## 状态
 
-**设计阶段**（2026-09-12）——设计文档 [design.md](./design.md)（v2）定稿待审；实施未开始（P0–P3 见 design.md §8）。
+**设计阶段**（2026-09-12）——设计文档 [docs/design.md](./docs/design.md)（v2）定稿待审；实施未开始（P0–P3 见 docs/design.md §8）。
 
 ## 关键事实
 
@@ -16,6 +16,6 @@
 ## 会话启动路径（对齐 ready-svg 仓惯例）
 
 1. `pwd && git status --short --branch` 确认目录与分支
-2. 读 `design.md`（本仓真源文档）+ `progress.md`（会话日志）+ `feature_list.json`（特性状态）
+2. 读 `docs/design.md`（本仓真源文档）+ `progress.md`（会话日志）+ `feature_list.json`（特性状态）
 3. Run `./init.sh`（P0 建立后；lint → unit → build，fail-fast）
 4. `git log --oneline -5` 对齐最近变更
