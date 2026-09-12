@@ -4,8 +4,8 @@
 
 ## Current State
 
-**Last Updated:** 2026-09-12
-**Active Feature:** feat-001 Harness & toolchain bootstrap——**已收口 done（1/10）**；下一步 = writing-plans 出 feat-002（P0 剩余：createKit + example 插件）计划
+**Last Updated:** 2026-09-12（会话交接）
+**Active Feature:** feat-001 Harness & toolchain bootstrap——**已收口 done（1/10）**；下一会话主题（用户预告）= **原型设计**（范围待澄清）；框架默认路径 = writing-plans 出 feat-002（P0 剩余：createKit + example 插件）计划
 **主线状态:** 设计定稿（docs/design.md v2 + 自审 F1–F5 + 外部 review 五轮 F6–F28）；harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实可跑全绿；实施未开始（feat-002 起进入 P0 剩余 → P1 模块搬迁）
 
 ## Status
@@ -56,6 +56,7 @@
 
 ### What's Next
 
+0. **新会话：原型设计讨论**（用户预告 2026-09-12）——范围待澄清（example 插件原型 / 产品 #2 原型 / 其他）；涉框架范围先回 design.md 核对，纯产品侧注意不越本仓边界
 1. **writing-plans 出 feat-002 计划**（P0 剩余：/config createKit 脊椎 TDD + example/ 最小示例插件；出口门 = init.sh 绿 + Chrome 手动加载三断言）→ 用户批准 → 实施
 2. 其后按 feature_list 顺序：feat-003 /messaging → feat-004 /io → feat-005 /session → feat-006 /api → feat-007 /panel → feat-008 /react → feat-009 /content → feat-010 /testing+README+发布
 

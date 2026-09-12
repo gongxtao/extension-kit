@@ -1,11 +1,11 @@
 # Session Handoff
 
-> 跨会话状态真源 = `docs/design.md`（设计）+ `feature_list.json` / `progress.md`（状态）；本文件是给下一个会话的快速入口。harness 四件套 + 工具链已就位（feat-001 done，2026-09-12）。
+> 跨会话状态真源 = `docs/design.md`（设计）+ `feature_list.json` / `progress.md`（状态）；本文件是给下一个会话的快速入口。harness 四件套 + 工具链已就位（feat-001 done，2026-09-12）；设计已经外部 AI 五轮 review 收口（F1–F28，全部逐条回源验证）。
 
 ## Current Objective
 
 - Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审 F1–F5 + 外部 review 五轮 F6–F28）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
-- Current status: **feat-001 Harness & toolchain bootstrap 已收口（1/10）**——harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实全绿；设计经两轮 review 收口；实施未开始，下一步 = writing-plans 出 feat-002（P0 剩余）计划
+- Current status: **feat-001 Harness & toolchain bootstrap 已收口（1/10）**——harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实全绿；**设计经五轮 review 收口（F1–F28），实施未开始**；下一会话主题（用户预告 2026-09-12）= **原型设计**——范围待新会话与用户澄清（example 插件原型？产品 #2 原型？UI 原型？），默认框架路径 writing-plans feat-002 不变
 - Branch / commit: `main`（最新见 `git log --oneline -5`）
 
 ## 铁律：落地质则（用户明确要求，优先级最高）
@@ -70,11 +70,12 @@
 
 ## Next Session Startup
 
+0. **本会话主题（用户预告）：原型设计**——开工前先澄清范围：指 example/ 插件原型（框架 P0 载体）？产品 #2 原型（属产品仓，不属本仓）？还是别的？若涉框架范围（如 example 装配形态、panel 宿主形态），先回 `docs/design.md` 对应节核对/补裁定再动手；纯产品侧原型则不在本仓范围，注意 Stay in scope。
 1. `pwd && git status --short --branch`（本仓，main 分支；新 shell 先 `nvm use`）
-2. 读 `CLAUDE.md` 启动头 → `docs/design.md`（真源，尤其 §4 模块 / §8 切分 / §9 溯源表）→ `feature_list.json` / `progress.md` → 本文件
+2. 读 `CLAUDE.md` 启动头 → `docs/design.md`（真源，尤其 §4 模块+CaptureSource 契约 / §5 ns 全量清单+createKit 契约 / §6 manifest 映射表 / §3 产品常量对账单 / §8 切分 / §9 溯源表）→ `feature_list.json` / `progress.md` → 本文件
 3. **Run `./init.sh`** —— 基线先绿（三步 fail-fast，feat-001 已验证可跑）
 4. **跨仓读源**：`ls ../ready-svg/extension/src/lib/` 对照 design.md §9 溯源映射表（做哪个特性读哪个源文件，勿提前全读）
-5. 调 writing-plans 技能出 feat-002（P0 剩余：createKit + example 插件）计划 → 用户批准 → 实施
+5. （若走框架默认路径）调 writing-plans 技能出 feat-002（P0 剩余：createKit + example 插件）计划 → 用户批准 → 实施——API 依据已全部成文：createKit 契约（§5/F20）+ ns 全量清单（§5/F11·F16）+ CaptureSource 契约（§4/F26），勿自 invent
 6. 实施纪律：TDD 强制（复制测试先改参数化转红，再泛化代码转绿）；每个 commit 框架仓可构建；完成任一特性后更新状态三件套 + 回填 §9 溯源表 commit 列
 
 ## Verification Evidence
@@ -89,4 +90,4 @@
 
 ## Recommended Next Step
 
-新会话第一动作：**writing-plans 出 P0 详细计划**（仓 bootstrap：harness 四件套 + tsdown/vitest/eslint 接线 + example/ 最小示例插件；出口门 = 框架 init.sh 绿 + example Chrome 加载冒烟三断言）。
+新会话第一动作：**与用户澄清「原型设计」范围**（见 Next Session Startup 第 0 条）。若为框架默认路径：writing-plans 出 feat-002 计划（createKit + example 插件；出口门 = init.sh 绿 + Chrome 手动加载三断言——断言规格即 §5 createKit 契约 + ns 全量清单）。设计侧五轮 review 已收敛（F1–F28），不建议再开第六轮文档 review——下一个高信息量 review 对象是代码。
