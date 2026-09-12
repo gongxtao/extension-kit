@@ -1,0 +1,84 @@
+{
+ "features": [
+  {
+   "id": "feat-001",
+   "name": "Harness & toolchain bootstrap",
+   "description": "harness 五子系统落地（CLAUDE.md 启动头含落地质则 / feature_list / progress / init.sh / session-handoff）+ 工具链骨架（tsdown/vitest/eslint/tsc + src 占位 + 根入口 smoke 测试），init.sh 三步真实可跑",
+   "dependencies": [],
+   "status": "done",
+   "evidence": "2026-09-12 harness-creator skill 打底 + ready-svg 惯例全量定制：CLAUDE.md（启动头+落地质则铁律）/ feature_list 10 特性种子 / progress / init.sh 三步 fail-fast；工具链 tsdown 0.23+vitest 4.1+eslint 9.39+tsc 5.9（与 ready-svg extension 同版本钉齐）；./init.sh 三步 EXIT=0 实跑两轮（lint 零输出 / Tests 1/1 / dist 0.83 kB）；实装期捕出并修正包入口与 tsdown 实产不匹配（.js→.mjs）；详见 progress.md Evidence"
+  },
+  {
+   "id": "feat-002",
+   "name": "P0 remainder: /config createKit + example plugin",
+   "description": "createKit 脊椎（TDD：ns 派生键/消息 kind/DOM id 全断言，docs/design.md §5）+ example/ 最小示例插件（createKit 装配 + panel 骨架 + workspace 引用）。出口门：init.sh 绿 + Chrome 手动加载三断言（加载成功/面板开合/键-消息-DOM id）",
+   "dependencies": ["feat-001"],
+   "status": "pending",
+   "evidence": ""
+  },
+  {
+   "id": "feat-003",
+   "name": "/messaging",
+   "description": "defineMessages 轻量工厂（ns 前缀类型 + 守卫；畸形消息静默丢弃）+ kitMessages 框架内置协议。源：ready-svg handoff.ts 内 7 消息形提炼（溯源表 §9）",
+   "dependencies": ["feat-002"],
+   "status": "pending",
+   "evidence": ""
+  },
+  {
+   "id": "feat-004",
+   "name": "/io",
+   "description": "clipboard（原样）/ asset-io 核（产品 fetcher 注入化）/ flag-store（onboarding 泛化 createFlagStore(ns)）/ 存储封装。源：ready-svg lib/clipboard·asset-io·onboarding",
+   "dependencies": ["feat-002"],
+   "status": "pending",
+   "evidence": ""
+  },
+  {
+   "id": "feat-005",
+   "name": "/session",
+   "description": "session-codec / auth-rest / session-store（近原样，已 DI）+ me-cache 泛型化（最小身份契约 { userId }，键 ns 化）。Supabase 特定保留。源：ready-svg lib/session-*·me-cache",
+   "dependencies": ["feat-002"],
+   "status": "pending",
+   "evidence": ""
+  },
+  {
+   "id": "feat-006",
+   "name": "/api",
+   "description": "apiFetch 传输骨架（Bearer/401 映射/信封守卫/multipart/raw 双通道）——MeInfo 完全归产品，/api 纯传输。源：ready-svg lib/api-client.ts 传输核",
+   "dependencies": ["feat-005"],
+   "status": "pending",
+   "evidence": ""
+  },
+  {
+   "id": "feat-007",
+   "name": "/panel",
+   "description": "panel-host / panel-prefs（键/消息/DOM id ns 化；panel.html 地址/宽度/边线样式可配）。源：ready-svg lib/panel-host·panel-prefs",
+   "dependencies": ["feat-003"],
+   "status": "pending",
+   "evidence": ""
+  },
+  {
+   "id": "feat-008",
+   "name": "/react (useSession)",
+   "description": "逻辑 hooks 子路径（react peerDependency）：useSession 迁入（近原样，编排已 DI）。源：ready-svg lib/useSession.ts + 433 行测试随迁（@testing-library/react 为 devDep）",
+   "dependencies": ["feat-005"],
+   "status": "pending",
+   "evidence": ""
+  },
+  {
+   "id": "feat-009",
+   "name": "/content",
+   "description": "目标无关运行时（徽标三态机/悬停隐现/顶层重挂 + storage.session 交接通道 + 扫描机制）+ capture source 接口（discover/eligibility/extract/decodeCdn 可选）+ 图片抓取源（page-image 泛化）+ cdn 代理取字节层。源：ready-svg lib/badge-overlay·page-image·handoff + content 入口扫描机制",
+   "dependencies": ["feat-003", "feat-004"],
+   "status": "pending",
+   "evidence": ""
+  },
+  {
+   "id": "feat-010",
+   "name": "/testing + README + publish pipeline",
+   "description": "假件工厂最小集（fakeStorageArea/fakeCookies/fakeMenus/消息假件）+ Playwright 助手 + README 装配指南（manifest/入口骨架片段）+ 变更协议 + GitHub 私有远程仓创建首推 + Packages 发布管线。出口门：0.1.0 可安装（dry-run）",
+   "dependencies": ["feat-009"],
+   "status": "pending",
+   "evidence": ""
+  }
+ ]
+}

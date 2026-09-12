@@ -4,7 +4,7 @@
 
 ## 状态
 
-**设计阶段**（2026-09-12）——设计文档 [docs/design.md](./docs/design.md)（v2）定稿待审；实施未开始（P0–P3 见 docs/design.md §8）。
+**harness 就绪、实施待始**（2026-09-12）——设计 [docs/design.md](./docs/design.md)（v2）定稿；feat-001 harness & 工具链收口（`./init.sh` 三步全绿）；下一步 feat-002（P0 剩余：createKit + example 插件），入口见 [session-handoff.md](./session-handoff.md)。
 
 ## 关键事实
 
@@ -13,9 +13,9 @@
 - **首个消费者**：产品 #2（需登录 web 账号 + 抓取页面内容的插件，待开工）
 - **可选模块**：`/content` 页面集成——产品不 import 则不携带（无 content script、无 host 权限需求）
 
-## 会话启动路径（对齐 ready-svg 仓惯例）
+## 会话启动路径（对齐 ready-svg 仓惯例；harness 已就位）
 
-1. `pwd && git status --short --branch` 确认目录与分支
-2. 读 `README.md`（本文件）→ `docs/design.md`（真源文档）→ `session-handoff.md`（会话入口，含落地质则铁律）
-3. `progress.md` / `feature_list.json` / `./init.sh` 为 P0 交付物（建立后加入本路径）
+1. `pwd && git status --short --branch` 确认目录与分支（新 shell 先 `nvm use`）
+2. 读 `CLAUDE.md` 启动头（含落地质则铁律）→ `docs/design.md`（真源）→ `session-handoff.md`（会话入口）→ `feature_list.json` / `progress.md`
+3. Run `./init.sh`（lint → unit → build，fail-fast）
 4. `git log --oneline -5` 对齐最近变更

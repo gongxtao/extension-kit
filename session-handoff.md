@@ -1,12 +1,12 @@
 # Session Handoff
 
-> 跨会话状态真源 = `docs/design.md`（设计）+ 本文件（会话入口）；`progress.md` / `feature_list.json` / `init.sh` 为 P0 交付物（尚未建）。
+> 跨会话状态真源 = `docs/design.md`（设计）+ `feature_list.json` / `progress.md`（状态）；本文件是给下一个会话的快速入口。harness 四件套 + 工具链已就位（feat-001 done，2026-09-12）。
 
 ## Current Objective
 
 - Goal: 按 `docs/design.md`（v2，2026-09-12 用户审定 + 自审修订）实施 P0–P3，建成 `@gongxtao/extension-kit` 插件通用能力框架
-- Current status: **仓内仅设计产物（3 commits），实施未开始**——下一步 = writing-plans 出 P0 详细计划，用户批准后动工
-- Branch / commit: `main` @ `79e1eee`
+- Current status: **feat-001 Harness & toolchain bootstrap 已收口（1/10）**——harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实全绿；实施未开始，下一步 = writing-plans 出 feat-002（P0 剩余）计划
+- Branch / commit: `main`（最新见 `git log --oneline -5`）
 
 ## 铁律：落地质则（用户明确要求，优先级最高）
 
@@ -25,11 +25,12 @@
 
 ## Next Session Startup
 
-1. `pwd && git status --short --branch`（本仓，main 分支）
-2. 读 `README.md` → `docs/design.md`（真源，尤其 §4 模块 / §8 切分 / §9 溯源表）→ 本文件
-3. **跨仓读源**：`ls ../ready-svg/extension/src/lib/` 对照 design.md §9 溯源映射表过一遍源文件（P0 前建立地形感；不急着细读，做到哪读到哪）
-4. 调 writing-plans 技能出 P0 计划（内容与出口门见 design.md §8 P0 行）→ 用户批准 → 实施
-5. 实施纪律：TDD 强制（复制测试先改参数化转红，再泛化代码转绿）；每个 commit 框架仓可构建；完成任一 Phase 后更新本文件 + 回填 §9 溯源表 commit 列
+1. `pwd && git status --short --branch`（本仓，main 分支；新 shell 先 `nvm use`）
+2. 读 `CLAUDE.md` 启动头 → `docs/design.md`（真源，尤其 §4 模块 / §8 切分 / §9 溯源表）→ `feature_list.json` / `progress.md` → 本文件
+3. **Run `./init.sh`** —— 基线先绿（三步 fail-fast，feat-001 已验证可跑）
+4. **跨仓读源**：`ls ../ready-svg/extension/src/lib/` 对照 design.md §9 溯源映射表（做哪个特性读哪个源文件，勿提前全读）
+5. 调 writing-plans 技能出 feat-002（P0 剩余：createKit + example 插件）计划 → 用户批准 → 实施
+6. 实施纪律：TDD 强制（复制测试先改参数化转红，再泛化代码转绿）；每个 commit 框架仓可构建；完成任一特性后更新状态三件套 + 回填 §9 溯源表 commit 列
 
 ## Verification Evidence
 

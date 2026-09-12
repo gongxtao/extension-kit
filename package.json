@@ -1,0 +1,31 @@
+{
+  "name": "@gongxtao/extension-kit",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "浏览器插件通用能力框架（headless 核心 + /react 逻辑 hooks）——copy-out 抽离自 ready-svg 插件（基线 95d0842）",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "eslint . && tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.25",
+    "eslint": "^9.39.1",
+    "tsdown": "^0.23.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.11"
+  }
+}
