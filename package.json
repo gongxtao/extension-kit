@@ -10,6 +10,10 @@
     ".": {
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
+    },
+    "./config": {
+      "types": "./dist/config/index.d.mts",
+      "import": "./dist/config/index.mjs"
     }
   },
   "files": [
@@ -18,7 +22,7 @@
   "scripts": {
     "lint": "eslint . && tsc --noEmit",
     "test": "vitest run",
-    "build": "tsdown"
+    "build": "tsdown && node scripts/assert-exports.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.19.25",

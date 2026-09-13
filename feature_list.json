@@ -13,8 +13,8 @@
    "name": "P0 remainder: /config createKit + example plugin",
    "description": "createKit 脊椎（TDD：ns 派生键/消息 kind/DOM id 全断言，docs/design.md §5）+ example/ 最小示例插件（createKit 装配 + panel 骨架 + workspace 引用）。出口门：init.sh 绿 + Chrome 手动加载三断言（加载成功/面板开合/键-消息-DOM id）",
    "dependencies": ["feat-001"],
-   "status": "pending",
-   "evidence": ""
+   "status": "done",
+   "evidence": "2026-09-13 TDD：createKit.test 先红后绿（7 测试全过——§5 全量清单 ns='rsvg' 逐字节等价 + ns='testkit' 参数化 + namespace [a-z0-9]+ 校验 + 无状态纯派生，F20 契约）；tsdown/package.json 双入口（./config）+ §6 导出路径断言固化（scripts/assert-exports.mjs，build 步末尾）；根入口重导出 createKit+全类型；example/ 最小 WXT 插件（wxt 0.21.4 + file:.. 引用框架 dist；background 菜单+toolbar 消息 / content iframe 宿主+开合 / panel.html Close 按钮——装配形态照 ready-svg）；出口门：./init.sh 三步绿（7 tests + exports 2 入口对齐）+ Chrome 真机三断言全过（scripts/chrome-smoke.mjs 可脚本化冒烟，EXIT=0 复跑两轮：扩展加载注入 / toggle-开+Close-关+toggle-再开再关 / console 三属性 exkit-me-cache·exkit-toggle-panel·exkit-panel-host）；品牌 Chrome 137+ 禁 --load-extension 须 UI 载入一次（README 记录）"
   },
   {
    "id": "feat-003",

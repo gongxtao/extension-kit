@@ -4,9 +4,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-09-12（会话交接）
-**Active Feature:** feat-001 Harness & toolchain bootstrap——**已收口 done（1/10）**；下一会话主题（用户预告）= **原型设计**（范围待澄清）；框架默认路径 = writing-plans 出 feat-002（P0 剩余：createKit + example 插件）计划
-**主线状态:** 设计定稿（docs/design.md v2 + 自审 F1–F5 + 外部 review 五轮 F6–F28）；harness 五子系统 + 工具链骨架就位，`./init.sh` 三步真实可跑全绿；实施未开始（feat-002 起进入 P0 剩余 → P1 模块搬迁）
+**Last Updated:** 2026-09-13（feat-002 收口）
+**Active Feature:** feat-002 /config createKit + example 插件——**done（2/10）**；下一特性 feat-003 /messaging（defineMessages 工厂 + kitMessages 内置协议）
+**主线状态:** 设计定稿（F1–F28 收口）；P0 全部完成（feat-001 harness + feat-002 createKit/example）；P1 确定性核心搬迁待始（§8：messaging → io → session → api → panel → react）
 
 ## Status
 
@@ -49,16 +49,22 @@
   - F27 §4 页内注入纪律独立条款（Shadow DOM 隔离/:host all:initial、不改页面 DOM 唯一例外 squeeze、data-${ns}-* 标记 + z-index 2147483647 同值后到压制）
   - F28 §1 非目标补「仅 Chromium MV3（Chrome ≥123 随源钉）」
   - 小项①：本文件与 session-handoff 的 F7 陈旧签名补「已被 F15 取代」标注；小项②：F6 小节「全 DI」限定（panel-host 直用全局 document/window，非全 DI）
+- [x] **feat-002 /config createKit + example 插件**（本会话，2026-09-13）——TDD 红→绿：
+  - `src/config/createKit.ts`：KitConfig（namespace `[a-z0-9]+` 单段校验）+ Kit 六派生面（key/kind/domId/dataAttr/cssName/menuId，F20 契约）——唯一无源对应物抽象按 F20 例外登记约束实现（纯字符串派生无状态；ns='rsvg' 与源字面量逐字节等价，§5 全量清单即测试规格）
+  - 测试 7 条：清单全表（5 存储键/7 消息 kind/DOM id+4 data 属性+2 CSS 名/菜单 id）+ testkit 参数化 + 非法 ns 拒绝 + 同参同果
+  - 工程接线：tsdown/package.json 加 `./config` 入口；**§6 导出路径断言固化**（scripts/assert-exports.mjs 接进 build 步——每条 exports 路径 dist 实产存在再放行）；根入口重导出
+  - `example/`：最小 WXT 插件（wxt 0.21.4 钉齐 ready-svg；`file:..` 引用框架 dist，非 npm workspaces——根基线零扰动）：kit.ts（ns='exkit'）+ background（菜单 kit.menuId('convert') + toolbar/menu 双消息链）+ content（iframe 宿主 kit.domId('panel-host') + toggle/show/close 三消息）+ panel.html（Close 按钮）；装配形态照 ready-svg 最小化裁剪
+  - **Chrome 冒烟可脚本化**（§7「手动/可脚本化」兑现）：scripts/chrome-smoke.mjs——CDP 驱动（Page.navigate 直达扩展页作驱动上下文，避 MV3 SW 空闲自停竞态；扩展 id 从 profile Secure Preferences 自动发现），三断言全过复跑两轮
+  - 实装期踩坑记录：品牌 Chrome 137+ 已禁 `--load-extension`（153 实证静默忽略）——须经 chrome://extensions UI 载入一次（README 记录）；/json/new 的 url 参数对扩展页无效须走 Page.navigate；残留顶层 panel.html 页会混入 target 列表，冒烟用 `window.parent !== window` 过滤真 iframe
 
 ### What's In Progress
 
-- 无——feat-001 收口，无在途工作
+- 无——feat-002 收口，无在途工作
 
 ### What's Next
 
-0. **新会话：原型设计讨论**（用户预告 2026-09-12）——范围待澄清（example 插件原型 / 产品 #2 原型 / 其他）；涉框架范围先回 design.md 核对，纯产品侧注意不越本仓边界
-1. **writing-plans 出 feat-002 计划**（P0 剩余：/config createKit 脊椎 TDD + example/ 最小示例插件；出口门 = init.sh 绿 + Chrome 手动加载三断言）→ 用户批准 → 实施
-2. 其后按 feature_list 顺序：feat-003 /messaging → feat-004 /io → feat-005 /session → feat-006 /api → feat-007 /panel → feat-008 /react → feat-009 /content → feat-010 /testing+README+发布
+1. **feat-003 /messaging**：defineMessages 轻量工厂（ns 前缀类型 + 守卫；畸形消息静默丢弃）+ kitMessages 框架内置 7 kind——源：handoff.ts 6 消息形 + panel-host.ts close-panel 提炼（§3/§9）
+2. 其后按依赖序：feat-004 /io → feat-005 /session → feat-006 /api → feat-007 /panel → feat-008 /react → feat-009 /content → feat-010 /testing+发布
 
 ## Blockers / Risks
 
@@ -92,25 +98,25 @@
 
 ## Files Modified This Session
 
-- `CLAUDE.md` - 新建（skill 模板重写为项目版：启动工作流 + 落地质则铁律 + DoD + 提交风格）
-- `feature_list.json` - 新建（skill 占位模板替换为 10 特性种子，依赖链对齐 design.md §8）
-- `progress.md` - 新建（本文件，替换 skill 模板）
-- `init.sh` - skill 生成版重写（三步中文标签 + 未覆盖项说明）
-- `package.json` / `tsconfig.json` / `eslint.config.mjs` / `vitest.config.ts` / `tsdown.config.ts` - 新建（工具链骨架）
-- `src/index.ts` / `src/index.test.ts` - 新建（占位根入口 + smoke 测试）
-- `.gitignore` / `.nvmrc` - 新建
-- `README.md` - 启动路径同步（harness 三件已就位）；本会话另修 /panel 权限说法（F10）
-- `docs/design.md` - 本会话二轮 F6–F11（12 处编辑）+ 三轮 F12–F16（8 处）+ 四轮 F17–F22+F15 收紧（9 处）+ 五轮 F23–F28（9 处：头部 / §1 F28 / D6·§3 页面集成 F25+F24 / §3 产品常量对账单 F23 / F6 全 DI 限定 / §4 CaptureSource 契约 F26 + 页内注入纪律 F27 / §8 P2 行）
-- `.gitignore` - 加 `.workbuddy/`（外部 AI 记忆区，保留不删）
+- `src/config/createKit.ts` / `src/config/index.ts` / `src/config/createKit.test.ts` - 新建（/config 模块：KitConfig + Kit 六派生面 + 7 测试）
+- `src/index.ts` - 根入口改便捷重导出（createKit + 全类型，保留 KIT_NAME smoke 锚点）
+- `tsdown.config.ts` / `package.json` - 双入口（./config）+ build 步接导出路径断言
+- `scripts/assert-exports.mjs` - 新建（§6 导出路径断言）
+- `scripts/chrome-smoke.mjs` - 新建（example Chrome 冒烟可脚本化，三断言 CDP 驱动）
+- `example/` - 新建（package.json / wxt.config.ts / tsconfig.json / README.md / src/lib/kit.ts / entrypoints background·content·panel）
+- `eslint.config.mjs` - ignores 加 example/**
+- `.gitignore` - 加 .output/ .wxt/（WXT 产物）
+- `init.sh` - 尾注更新（冒烟可脚本化指向 example npm run smoke）
+- `feature_list.json` / `progress.md` - feat-002 收口记录
+- `docs/design.md` §9 /config 行 - 抽离 commit 回填（见 git log）
 
 ## Evidence of Completion
 
-- [x] `./init.sh` 三步 EXIT=0（2026-09-12 实跑两轮——首轮发现入口后缀缺陷修正后复跑）：
-  - Step 1 lint：`eslint . && tsc --noEmit` 零输出通过
-  - Step 2 unit：`Test Files 1 passed (1)` / `Tests 1 passed (1)`
-  - Step 3 build：`tsdown v0.23.0` → `dist/index.mjs 0.42 kB + dist/index.d.mts 0.42 kB`，Build complete 384ms
-- [x] 包入口与产物一致：exports `. → dist/index.mjs`（types → `.d.mts`）
-- [ ] example Chrome 冒烟——不在本特性范围（feat-002 出口门）
+- [x] feat-002 出口门（2026-09-13 实跑）：
+  - `./init.sh` 三步绿：eslint+tsc 零错误 / vitest 7/7（2 文件）/ tsdown 双入口 6 files + assert-exports「exports ↔ dist 全部对齐（2 入口）」
+  - Chrome 真机三断言（scripts/chrome-smoke.mjs，EXIT=0 复跑两轮）：①扩展加载且 content 注入 ②面板开合全链（toggle 开 → 面板 iframe 内 Close 点击关 → toggle 再开 → 再关）③ns 三名字 console 实证 `{storageKey: exkit-me-cache, messageKind: exkit-toggle-panel, domId: exkit-panel-host}`
+  - example 构建：wxt build 产物 manifest/panel.html/background.js/content 齐全；compile（tsc）零错误
+- [ ] example Chrome 冒烟——feat-002 起已脚本化并实跑通过（上行）
 
 ## Notes for Next Session
 

@@ -1,9 +1,11 @@
 /**
- * @gongxtao/extension-kit —— 根入口（占位）
+ * @gongxtao/extension-kit —— 根便捷入口（createKit + 全类型，design.md §6）
  *
  * 模块按 docs/design.md §4 落地（/config /session /api /panel /content
- * /messaging /io /react /testing 九 subpath），首个真实导出 = feat-002 的
- * createKit。本文件此刻只承载工具链基线（init.sh 三步可跑可绿）。
+ * /messaging /io /react /testing 九 subpath）；细节用法走各 subpath。
  */
+
+export { createKit } from './config';
+export type { Kit, KitConfig } from './config';
 
 export const KIT_NAME = '@gongxtao/extension-kit';

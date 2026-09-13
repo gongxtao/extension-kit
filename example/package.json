@@ -1,0 +1,21 @@
+{
+  "name": "extension-kit-example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "extension-kit 装配活样例（P0 骨架）——createKit 装配 + 极简面板开合",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "compile": "wxt prepare && tsc --noEmit",
+    "smoke": "node ../scripts/chrome-smoke.mjs"
+  },
+  "dependencies": {
+    "@gongxtao/extension-kit": "file:.."
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "wxt": "^0.21.4"
+  }
+}
