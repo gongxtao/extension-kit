@@ -38,6 +38,10 @@
     "./react": {
       "types": "./dist/react/index.d.mts",
       "import": "./dist/react/index.mjs"
+    },
+    "./content": {
+      "types": "./dist/content/index.d.mts",
+      "import": "./dist/content/index.mjs"
     }
   },
   "peerDependencies": {

@@ -69,8 +69,8 @@
    "name": "/content",
    "description": "目标无关运行时（徽标三态机/悬停隐现/顶层重挂 + storage.session 交接通道 + 扫描机制）+ capture source 接口（discover/eligibility/extract/decodeCdn 可选）+ 图片抓取源（page-image 泛化）+ cdn 代理取字节层。源：ready-svg lib/badge-overlay·page-image·handoff + content 入口扫描机制",
    "dependencies": ["feat-003", "feat-004"],
-   "status": "pending",
-   "evidence": ""
+   "status": "done",
+   "evidence": "2026-09-13 copy-out + 泛化（TDD 77 测试红→绿）：capture/types CaptureSource 契约（F26——isTarget 复核同函数 F9/extract/decodeCdn 声明式 opt-in F5；EXTRACT_MAX_BYTES 通道上限 F18）；capture/image imageCapture（R42 阈值矩阵全保留+阈值可覆盖、R45 两路链+sourceOf 站点映射删除 F17 值域归产品、makeDom/makeOffscreen 双转码面）；runtime/handoff store 键注入 + metadata 透传零值域（F17/F24）+ 编解码/TTL 矩阵；badge-overlay 三态机/悬停隐现/顶层重挂（R58/R59 矩阵全保留）+ F23 品牌色/图形 path/双文案/aria 注入零缺省 + CSS 动画名/attr ns 化注入 + cornerFor 角位策略注入；content-runtime 扫描/去抖/补扫/R46 点击链/R49 接收/R53 兜底/R90 直开矩阵全保留（F26 时序：isTarget 复核→extract→可救败+decodeCdn 声明才兜底）；background F13 整体参数化（菜单 id/title/contexts 注入 + SW 唤醒 removeAll 幂等 + lastError 回调消费矩阵）；§4 分层 eslint 第一刀（底层零依赖钉死）；init.sh 三步绿 212 tests + 9 入口对齐"
   },
   {
    "id": "feat-010",
