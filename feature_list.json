@@ -37,8 +37,8 @@
    "name": "/session",
    "description": "session-codec / auth-rest / session-store（近原样，已 DI）+ me-cache 泛型化（最小身份契约 { userId }，键 ns 化）。Supabase 特定保留。源：ready-svg lib/session-*·me-cache",
    "dependencies": ["feat-002"],
-   "status": "pending",
-   "evidence": ""
+   "status": "done",
+   "evidence": "2026-09-13 copy-out + 泛化（TDD 38 测试）：session-codec 近原样（ssr 0.6.1 对齐不变量与等价性论证注释随码走）；auth-rest 近原样 + SupabaseAuthConfig 结构子集（F19/F23 装配注入）；session-store 近原样（single-flight L6 / 写代次终审 I-2 / watch 重读串行化修复轮一全部矩阵 12 测试随码带走，SessionStoreConfig 四字段全链）；me-cache 泛型化 createMeCache<T>(area, validate, key, now?)——value 更名（F3）/ validate 守卫注入（F7）/ 位置参（F15）/ key 缝按 F15 规则补位并回 design.md 记裁定；init.sh 三步绿 78 tests + 5 入口对齐"
   },
   {
    "id": "feat-006",

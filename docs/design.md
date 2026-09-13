@@ -45,7 +45,7 @@ v1 方案层三选一结论保留：**单包多入口模块库**（选定）vs �
 | 能力 | 源文件（extension/src/lib/） | 泛化点 |
 |---|---|---|
 | 配置装配 | config.ts | 框架不持产品常量；KitConfig 注入；createKit 派生 ns 化资源 |
-| 会话层 | session-codec / auth-rest / session-store / me-cache | 近原样（已 DI）；me-cache 泛型化——F7 落形（F15 收紧后签名随源位置参）：`createMeCache<T>(area, validate: (v: unknown) => v is T, now?)`，条目 `{value, userId, savedAt}`，`set(value, userId)`（源 `me` 字段随 F3 更名 `value`；`isMeInfo` 硬 import 换守卫注入缝，ready-svg 消费侧传 `isMeInfo` 即适配）+ 键 ns 化 |
+| 会话层 | session-codec / auth-rest / session-store / me-cache | 近原样（已 DI）；me-cache 泛型化——F7 落形（F15 收紧后签名随源位置参）：`createMeCache<T>(area, validate: (v: unknown) => v is T, key, now?)`，条目 `{value, userId, savedAt}`，`set(value, userId)`（源 `me` 字段随 F3 更名 `value`；`isMeInfo` 硬 import 换守卫注入缝，ready-svg 消费侧传 `isMeInfo` 即适配）+ 键 ns 化（**key 缝补裁定（feat-005 实装，2026-09-13）**：F7/F15 文本签名漏列 key，按 F15「新增缝按序追加」规则补为第 3 位必填参——§5 键 ns 化要求键经 `kit.key('me-cache')` 由调用方派生，与 flag-store (area, key) 同口径） |
 | 逻辑 hooks | useSession（→ /react） | 近原样（编排已 DI）；依赖 session 模块（P1 步 ⑥；review F2 裁定迁入） |
 | API 传输 | api-client 的 apiFetch 核心 | 端点函数留产品；MeInfo 完全归产品（review 修订 F3——框架只要最小身份契约 `{ userId }`，me-cache 泛型化，/api 收敛纯传输） |
 | 页内面板 | panel-host / panel-prefs | 键/消息/DOM id ns 化；panel.html 地址、宽度、边线样式可配 |

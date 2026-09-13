@@ -22,6 +22,10 @@
     "./io": {
       "types": "./dist/io/index.d.mts",
       "import": "./dist/io/index.mjs"
+    },
+    "./session": {
+      "types": "./dist/session/index.d.mts",
+      "import": "./dist/session/index.mjs"
     }
   },
   "files": [

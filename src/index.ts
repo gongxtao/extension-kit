@@ -37,5 +37,22 @@ export {
   type StorageArea,
   type StorageAreaWithOnChanged,
 } from './io';
+export {
+  decodeSessionCookie,
+  encodeSessionCookies,
+  planCookieWrites,
+  refreshSession,
+  revokeSession,
+  createSessionStore,
+  createMeCache,
+  MAX_CHUNK_SIZE,
+  type StoredSession,
+  type SupabaseAuthConfig,
+  type SessionStore,
+  type SessionStoreConfig,
+  type CookieAccess,
+  type MeCache,
+  type MeCacheEntry,
+} from './session';
 
 export const KIT_NAME = '@gongxtao/extension-kit';
