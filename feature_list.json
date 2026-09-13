@@ -61,8 +61,8 @@
    "name": "/react (useSession)",
    "description": "逻辑 hooks 子路径（react peerDependency）：useSession 迁入（近原样，编排已 DI）。源：ready-svg lib/useSession.ts + 433 行测试随迁（@testing-library/react 为 devDep）",
    "dependencies": ["feat-005"],
-   "status": "pending",
-   "evidence": ""
+   "status": "done",
+   "evidence": "2026-09-13 copy-out + 泛型化（TDD 18 测试全绿）：useSession<TMe> 近原样（loadSeq 轮次/evidenceRef 登录证据/乐观首绘/TTL 节流/request_failed 保持现态矩阵全保留）+ F3/F19 泛化——fetchMe 硬 import → fetchAccount 注入（产品用 /api apiFetch 封装，测试即此形态）、config.webOrigin 缺省 → baseUrl 必填、账户形状泛型 TMe、meCache 条目 value 字段；react 可选 peerDependency（/react 子路径隔离，根入口零 react）；测试 harness 踩坑记录：api 对象须构造于 render 外（新函数引用 → useEffect 重跑死循环）；init.sh 三步绿 135 tests + 8 入口对齐"
   },
   {
    "id": "feat-009",
