@@ -266,7 +266,7 @@ const mine = defineMessages(ns, {
 
 | 框架模块 | 源（ready-svg@95d0842） | 抽离 commit |
 |---|---|---|
-| /config | extension/src/lib/config.ts | （P1 填） |
+| /config | extension/src/lib/config.ts（KitConfig 注入形态）+ §5 全量清单（createKit 派生规格，F20 例外登记） | e7d98b3（feat-002） |
 | /session | lib/session-codec·auth-rest·session-store·me-cache | （P1 填） |
 | /api | lib/api-client.ts（传输核） | （P1 填） |
 | /panel | lib/panel-host·panel-prefs | （P1 填） |
@@ -277,7 +277,7 @@ const mine = defineMessages(ns, {
 | /content/cdn | background 装配内 cdnGrab 分支（SW 扩展权限 fetch）+ lib/page-image.ts 的 makeOffscreenCanvas——按能力归位，review3 修订 F14 | （P2 填） |
 | /content/handoff | lib/handoff.ts（store/守卫/编解码）+ background 装配内 deliverHandoff 收口（SW 半段，两分支共用：store.set → ack；QUOTA → too_large）+ HANDOFF_MAX_BYTES 通道上限（源自 page-image.ts:21，随通道走——产品换内容类型时门不丢；review4 修订 F18）——review3 修订 F14 | （P2 填） |
 | /io | lib/clipboard·asset-io·onboarding + convert-stores.ts:23（仅 StorageArea 结构类型；review2 修订 F8） | （P1 填） |
-| /messaging | （handoff.ts 6 消息形 + panel-host.ts close-panel 提炼；review2 修订） | （P1 填） |
+| /messaging | （handoff.ts 6 消息形 + panel-host.ts close-panel 提炼；review2 修订——业务 source 值域泛化为 metadata 透传，F17/F24） | （feat-003 回填） |
 | /react | lib/useSession.ts | （P1 填） |
 
 用途：ready-svg 侧若修了共享代码的 bug，按此表对照移植进框架（可选项，不承诺双向同步）。

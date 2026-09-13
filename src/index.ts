@@ -7,5 +7,21 @@
 
 export { createKit } from './config';
 export type { Kit, KitConfig } from './config';
+export {
+  kitMessages,
+  defineMessages,
+  type KitMessages,
+  type MessageEntry,
+  type MessageDef,
+  type MessageMap,
+  type ImageHandoffMessage,
+  type GrabRequestMessage,
+  type HandoffConsumedMessage,
+  type CdnGrabMessage,
+  type TogglePanelMessage,
+  type ShowPanelMessage,
+  type ClosePanelMessage,
+  type PanelMime,
+} from './messaging';
 
 export const KIT_NAME = '@gongxtao/extension-kit';

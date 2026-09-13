@@ -21,8 +21,8 @@
    "name": "/messaging",
    "description": "defineMessages 轻量工厂（ns 前缀类型 + 守卫；畸形消息静默丢弃）+ kitMessages 框架内置协议。源：ready-svg handoff.ts 内 7 消息形提炼（溯源表 §9）",
    "dependencies": ["feat-002"],
-   "status": "pending",
-   "evidence": ""
+   "status": "done",
+   "evidence": "2026-09-13 TDD 红→绿（11 测试）：kitMessages(ns) 内置 7 kind（面板三件+抓取两件+handoff 双向，ns='rsvg' 与源字面量逐字节等价）——payload 形状照源但 source 站点值域泛化为 metadata?: unknown 透传（F17/F24，框架零站点知识）；守卫矩阵逐条 copy 自源 is* 矩阵（畸形静默拒纪律继承）；defineMessages(ns, defs) 工厂（§5 钉死形状：kind 缺省 camelCase→kebab 派生、显式覆盖、payload 产品守卫注入）；ack 不占 kind（F12，归 /content/handoff）；./init.sh 三步绿（18 tests + exports 3 入口对齐）"
   },
   {
    "id": "feat-004",
