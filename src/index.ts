@@ -54,5 +54,11 @@ export {
   type MeCache,
   type MeCacheEntry,
 } from './session';
+export {
+  apiFetch,
+  type ApiDeps,
+  type ApiResult,
+  type ApiFetchOpts,
+} from './api';
 
 export const KIT_NAME = '@gongxtao/extension-kit';

@@ -26,6 +26,10 @@
     "./session": {
       "types": "./dist/session/index.d.mts",
       "import": "./dist/session/index.mjs"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.mts",
+      "import": "./dist/api/index.mjs"
     }
   },
   "files": [

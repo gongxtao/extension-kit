@@ -45,8 +45,8 @@
    "name": "/api",
    "description": "apiFetch 传输骨架（Bearer/401 映射/信封守卫/multipart/raw 双通道）——MeInfo 完全归产品，/api 纯传输。源：ready-svg lib/api-client.ts 传输核",
    "dependencies": ["feat-005"],
-   "status": "pending",
-   "evidence": ""
+   "status": "done",
+   "evidence": "2026-09-13 copy-out（TDD 12 测试）：apiFetch 传输核近原样（signed_out 短路不发请求 / 401 authentication_required 穿透 / 500·网络拒·信封畸形归 request_failed 严格区分 / POST JSON / FormData multipart 引用直传 / raw text 双通道矩阵全保留）；MeInfo 与端点函数（fetchMe 等）不进框架（F3 MeInfo 归产品）；StoredSession 类型级引用 /session（§4 分层纪律）；init.sh 三步绿 90 tests + 6 入口对齐"
   },
   {
    "id": "feat-007",
