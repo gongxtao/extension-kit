@@ -276,7 +276,7 @@ const mine = defineMessages(ns, {
 | /content/capture/image | lib/page-image.ts（GrabFailReason 六值跨层标注：taint/decode=canvas 路、too_large=通道（F18）、ineligible=点击复核、network/unsupported=抓取链；测试 231 行按能力拆分随 F14/F18 归位——review4 修订） | （P2 填） |
 | /content/cdn | background 装配内 cdnGrab 分支（SW 扩展权限 fetch）+ lib/page-image.ts 的 makeOffscreenCanvas——按能力归位，review3 修订 F14 | （P2 填） |
 | /content/handoff | lib/handoff.ts（store/守卫/编解码）+ background 装配内 deliverHandoff 收口（SW 半段，两分支共用：store.set → ack；QUOTA → too_large）+ HANDOFF_MAX_BYTES 通道上限（源自 page-image.ts:21，随通道走——产品换内容类型时门不丢；review4 修订 F18）——review3 修订 F14 | （P2 填） |
-| /io | lib/clipboard·asset-io·onboarding + convert-stores.ts:23（仅 StorageArea 结构类型；review2 修订 F8） | （feat-004 回填） |
+| /io | lib/clipboard·asset-io·onboarding + convert-stores.ts:23（仅 StorageArea 结构类型；review2 修订 F8） | ae07b7b（feat-004） |
 | /messaging | （handoff.ts 6 消息形 + panel-host.ts close-panel 提炼；review2 修订——业务 source 值域泛化为 metadata 透传，F17/F24） | 9ec68a1（feat-003） |
 | /react | lib/useSession.ts | （P1 填） |
 
