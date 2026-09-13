@@ -79,6 +79,14 @@
    "dependencies": ["feat-009"],
    "status": "done",
    "evidence": "2026-09-13（TDD 8 测试）：/testing 假件工厂最小集——createFakeStorageArea（onChanged changes 形+dump 观察缝+可编程抛错）/createFakeCookies（域过滤+逐 cookie 提交延迟+事件形）/createFakeMenus（lastError 回调通道）/createFakeContentRuntime/createFakeObserverFactory（零 vitest 依赖发布物）；playwright.ts 助手（launchExtensionOptions/extIdFromContext/openExtensionPage/injectSessionCookie/routeJson——结构类型运行时零依赖，标注品牌 Chrome 137+ 限制）；README 重写（安装/起步路径/manifest 骨架 F21/模块一览/变更协议）；.github/workflows/release.yml（v* 标签→lint+test+build+GitHub Packages）；version 0.1.0 + private:false + publishConfig registry；出口门实测：npm pack dry-run 40 files 49.4kB → tarball 真实 npm install → 根/config/testing 三入口导入可用；**追加收口（同日）**：example 升级为框架真实装配（/content startContentRuntime+createPanelHost+setupPageIntegration）并通过扩展版 chrome-smoke 四段断言——徽标抓图链真机全绿（canvas 造大图→自动挂徽标→点击→抓取+面板直开 R90→handoff 落 storage.session metadata 透传 F24），P2 出口门完整闭合"
+  },
+  {
+   "id": "feat-011",
+   "name": "demo: 框架端到端消费验证插件（用户指令 2026-09-14）",
+   "description": "demo/ 独立 WXT 插件（ns=demokit）作为『最小消费者』端到端验证框架：/config kit 装配 + /content 徽标抓图链（imageCapture+badge+handoff）+ /panel 面板宿主与 prefs + 面板页渲染抓取内容（isFresh TTL + metadata 胶囊）/ Copy（/io clipboard）/ 首开标记（flag-store）/ 模式切换（panel-prefs）。范围裁定：/session /api /react 不接真实后端（demo 无后端；三模块已由 68 个单测覆盖），demo 单测消费 /testing 假件完成闭环。出口门：init.sh 绿（demo 单测纳入根基线）+ demo compile/build 绿 + demo-smoke 真机全断言（徽标→点击→面板渲染内容→copy→flag→mode 持久化）",
+   "dependencies": ["feat-010"],
+   "status": "done",
+   "evidence": "2026-09-14 harness 流程全程（登记→TDD→实现→验证→收口）：TDD 视图模型 8 测试红→绿（handoffToView 空态/ready/stale R47 TTL + metadataLabel F24 展示层格式化；纳入根基线 228 tests）；demo compile/build 绿（33.39 kB）；UI 载入后 scripts/demo-smoke.mjs 六断言真机全绿复跑两轮（第二轮 mode 断言 overlay→squeeze 翻转同时证明跨运行持久化）：①扩展加载 ②canvas 造大图→自动挂徽标→点击→抓取+面板直开 R90 ③handoff 落 storage.session（metadata=demo-page+本轮新鲜度防旧记录冒充）④面板渲染 img dataUrl+胶囊+Copy 可见 ⑤首开标记 flag-store ⑥模式切换持久化 panel-prefs；踩坑记录：新扩展载入前已开的页面须 Page.reload 才注入新 content script；冒烟断言不得写死可持久化状态值（读前值断言翻转）；init.sh 三步绿 228 tests + 10 入口对齐"
   }
  ]
 }

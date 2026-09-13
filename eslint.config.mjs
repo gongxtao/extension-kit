@@ -1,7 +1,7 @@
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist/**', 'node_modules/**', 'coverage/**', 'example/**'] },
+  { ignores: ['dist/**', 'node_modules/**', 'coverage/**', 'example/**', 'demo/**'] },
   ...tseslint.configs.recommended,
   // 模块分层纪律（design.md §4）第一刀：config/messaging/io 为底层零依赖——
   // 禁止跨模块 import（跨层协作全走 DI 参数）；上层间 type 级引用纪律由

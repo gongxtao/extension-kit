@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Extension Kit Demo Panel</title>
+    <style>
+      :root { color-scheme: light; }
+      body {
+        margin: 0; font-family: system-ui, sans-serif; background: #fafafa; color: #181818;
+        display: flex; flex-direction: column; height: 100vh;
+      }
+      header {
+        display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+        border-bottom: 1px solid #e5e5e5; background: #fff;
+      }
+      header strong { font-size: 13px; }
+      header .spacer { flex: 1; }
+      button {
+        font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 6px;
+        border: 1px solid #d4d4d4; background: #fff; cursor: pointer;
+      }
+      button.primary { background: #7c5cff; border-color: #7c5cff; color: #fff; }
+      main { flex: 1; overflow: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+      .pill {
+        align-self: flex-start; font-size: 11px; padding: 3px 8px; border-radius: 99px;
+        background: #ede9fe; color: #5b21b6;
+      }
+      .hint { font-size: 12px; color: #737373; line-height: 1.6; }
+      img.preview {
+        max-width: 100%; border: 1px solid #e5e5e5; border-radius: 8px; background:
+        repeating-conic-gradient(#f0f0f0 0 25%, #fff 0 50%) 0 0/16px 16px;
+      }
+      .stale { color: #b45309; font-size: 12px; }
+      footer { padding: 8px 12px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #a3a3a3; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>Demo Panel</strong>
+      <span id="pill" class="pill" hidden></span>
+      <span class="spacer"></span>
+      <button id="copy" hidden>Copy data URL</button>
+      <button id="mode">Mode: squeeze</button>
+      <button id="close">Close</button>
+    </header>
+    <main id="main"></main>
+    <footer>extension-kit demo · ns=demokit · 首开标记见 storage.local</footer>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

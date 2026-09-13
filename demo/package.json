@@ -1,0 +1,21 @@
+{
+  "name": "extension-kit-demo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "extension-kit 端到端消费验证插件（feat-011）——徽标抓图 → 面板渲染 → 复制/偏好",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "compile": "wxt prepare && tsc --noEmit",
+    "smoke": "node ../scripts/demo-smoke.mjs"
+  },
+  "dependencies": {
+    "@gongxtao/extension-kit": "file:.."
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "wxt": "^0.21.4"
+  }
+}

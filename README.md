@@ -3,7 +3,7 @@
 浏览器插件通用能力框架（headless 核心 + `/react` 逻辑 hooks）——会话同步 / 页内面板宿主 / 页面集成抓取 / 消息协议 / 测试基建。新产品起步 = WXT 入口装配 + 业务视图，基础管线零重写。
 
 - **设计真源**：[docs/design.md](./docs/design.md)（v2，五轮 review 收口 F1–F28）
-- **装配活样例**：[example/](./example/)（WXT 构建 + Chrome 冒烟三断言，`npm run smoke` 可脚本化）
+- **装配活样例**：[example/](./example/)（装配形态参照）· [demo/](./demo/)（端到端消费验证：徽标抓图 → 面板渲染 → 复制/偏好，含真机冒烟）
 - **抽离源**：ready-svg 插件（基线 commit `95d0842`，冻结仓，copy-out 只抄不搬）
 - **仅 Chromium MV3**（Chrome ≥123 随源钉）；核心运行时零依赖；`/react` 的 react 为可选 peerDependency
 
