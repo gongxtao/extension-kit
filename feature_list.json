@@ -53,8 +53,8 @@
    "name": "/panel",
    "description": "panel-host / panel-prefs（键/消息/DOM id ns 化；panel.html 地址/宽度/边线样式可配）。源：ready-svg lib/panel-host·panel-prefs",
    "dependencies": ["feat-003"],
-   "status": "pending",
-   "evidence": ""
+   "status": "done",
+   "evidence": "2026-09-13 copy-out + 泛化（TDD 27 测试红→绿）：panel-prefs 近原样（R85/R96 矩阵全保留）+ keys 缝注入 {mode,width}（§5 键 ns 化，kit.key 派生口径）；panel-host 近原样（squeeze 记原值还原 F22 / 拖拽 clamp / 跨标签同步 / 杂讯不误触矩阵全保留）+ domId/closeMessage/resizeAttr 三注入缝（kit.domId/kind/dataAttr 派生）+ ariaLabel 零缺省（F23 产品文案）+ borderStyle 覆盖通用视觉缺省（F23）+ getPanelUrl 地址可配（源本 DI）；init.sh 三步绿 117 tests + 7 入口对齐"
   },
   {
    "id": "feat-008",

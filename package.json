@@ -30,6 +30,10 @@
     "./api": {
       "types": "./dist/api/index.d.mts",
       "import": "./dist/api/index.mjs"
+    },
+    "./panel": {
+      "types": "./dist/panel/index.d.mts",
+      "import": "./dist/panel/index.mjs"
     }
   },
   "files": [

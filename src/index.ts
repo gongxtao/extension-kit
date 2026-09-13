@@ -60,5 +60,18 @@ export {
   type ApiResult,
   type ApiFetchOpts,
 } from './api';
+export {
+  createPanelPrefs,
+  createPanelHost,
+  clampPanelWidth,
+  PANEL_DEFAULT_WIDTH_PX,
+  PANEL_MIN_WIDTH_PX,
+  PANEL_MAX_WIDTH_PX,
+  type PanelPrefs,
+  type PanelPrefsKeys,
+  type PanelMode,
+  type PanelHost,
+  type PanelHostDeps,
+} from './panel';
 
 export const KIT_NAME = '@gongxtao/extension-kit';
