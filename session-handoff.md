@@ -45,8 +45,9 @@
 
 ## Blockers / Risks
 
-- [ ] GitHub Actions 发布管线未实战跑过——打 v0.1.0 标签即触发；若 workflow 因权限失败，需在仓库 Settings → Actions → Workflow permissions 开 read/write packages 后重打标签
-- [ ] `@gongxtao` scope 已与 GitHub 账号核对一致（gongxtao）——原 open item 关闭
+- [x] ~~GitHub Actions 发布管线未实战跑过~~ —— **v0.1.0 已真实发布**（release workflow 四步全绿含 npm publish；包已入 GitHub Packages）
+- [x] ~~example 集成徽标抓图链冒烟（P2 出口门）~~ —— **已闭合**：example 升级为框架真实装配，chrome-smoke 扩四段断言真机全绿（canvas 造大图自包含零网络依赖）
+- [x] ~~`@gongxtao` scope 核对~~ —— GitHub 账号同名（gongxtao），原 open item 关闭
 - [ ] 品牌 Chrome 137+ 禁 --load-extension：playwright 助手标注适用 Chromium/CF T；chrome-smoke 前置须 UI 载入一次（example/README 记录）
-- [ ] /panel /content /react 的 jsdom 测试环境为 per-file docblock；vitest 全局切 jsdom 未做（无必要）
-- [ ] npm link 联调 DX、GitHub Packages 首次真发布——产品 #2 接入时验证
+- [ ] 本地/CI 外机器查询与安装包需按 README 配 .npmrc PAT（read:packages）——安装侧一次性前置
+- [ ] npm link 联调 DX——产品 #2 接入时验证

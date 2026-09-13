@@ -1,39 +1,45 @@
 /**
- * background 入口（P0 装配骨架）
+ * background 入口（P1 起升级为框架真实装配：setupPageIntegration 参数化整体）
  *
- * 演示 ns 化菜单 id + 消息 kind：
- * - toolbar 图标 → tabs.sendMessage {kind: kit.kind('toggle-panel')}——开↔关（R90 语义）
- * - 右键菜单（id = kit.menuId('convert')，F13 缺省派生）→ {kind: kit.kind('show-panel')}——
- *   菜单意图是开着面板（R49 语义）
- * - 幂等纪律（F22）：SW 每次唤醒 removeAll→rebuild；duplicate id 经 lastError 显式消费不炸
- *
- * framework 的 setupPageIntegration 参数化整体（菜单/toolbar/路由）随 feat-009
- * /content 落地；届时本文件收敛为「装配调用 + 产品值注入」的产品壳。
+ * 产品壳只剩「值注入」：菜单 title/contexts 文案（F23）、kit 派生 id/键、
+ * SW 转码面 makeOffscreenCanvas。chrome.* 各面按结构子集接线 browser 单例。
  */
 
 import { browser } from 'wxt/browser';
 import { defineBackground } from 'wxt/utils/define-background';
+import { kitMessages } from '@gongxtao/extension-kit';
+import {
+  createHandoffStore,
+  imageCapture,
+  makeOffscreenCanvas,
+  setupPageIntegration,
+} from '@gongxtao/extension-kit/content';
 import { kit } from '../../lib/kit';
 
 export default defineBackground(() => {
-  const menuId = kit.menuId('convert');
-
-  browser.contextMenus.removeAll(() => {
-    browser.contextMenus.create(
-      { id: menuId, title: 'Open Example Panel', contexts: ['all'] },
-      () => void browser.runtime.lastError,
-    );
-  });
-
-  browser.action.onClicked.addListener((tab) => {
-    if (tab?.id != null) {
-      void browser.tabs.sendMessage(tab.id, { kind: kit.kind('toggle-panel') });
-    }
-  });
-
-  browser.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === menuId && tab?.id != null) {
-      void browser.tabs.sendMessage(tab.id, { kind: kit.kind('show-panel') });
-    }
-  });
+  setupPageIntegration(
+    {
+      // R97 显式适配：create 错误在 chrome.runtime.lastError（回调内读取即消费）
+      menus: {
+        create: (props, onError) => {
+          browser.contextMenus.create(props as never, () => {
+            onError((browser.runtime as { lastError?: { message?: string } }).lastError?.message);
+          });
+        },
+        removeAll: (callback) => browser.contextMenus.removeAll(callback),
+        onClicked: browser.contextMenus.onClicked,
+      },
+      runtime: browser.runtime,
+      action: browser.action,
+      tabs: browser.tabs,
+      handoffStore: createHandoffStore(browser.storage.session, kit.key('image-handoff')),
+    },
+    {
+      messages: kitMessages('exkit'),
+      captureSource: imageCapture({ makeCanvas: makeOffscreenCanvas }),
+      makeCanvas: makeOffscreenCanvas,
+      menuId: kit.menuId('convert'),
+      menu: { title: 'Open Example Panel', contexts: ['image'] },
+    },
+  );
 });

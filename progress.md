@@ -36,10 +36,11 @@
 
 ## Blockers / Risks
 
-- [ ] GitHub Packages 首次真发布未验证（打标签即知；权限开关见 session-handoff）
-- [ ] example 集成 /content 徽标抓图链的 Chrome 冒烟（P2 出口门的 example 侧）——框架侧矩阵单测全绿 + chrome-smoke 面板链全过；徽标抓图链真机冒烟待 example 升级为完整装配后做
-- [ ] 品牌 Chrome 137+ 禁 --load-extension（playwright 助手与 chrome-smoke 均已注记）
+- [x] GitHub Packages 首次真发布——**已验证**：v0.1.0 标签触发 release workflow 全绿（lint/test/build/npm publish 四步 success），包已入库；本地查询需按 README 配 .npmrc PAT（安装侧一次性前置）
+- [x] example 集成徽标抓图链 Chrome 冒烟（P2 出口门）——**已闭合**：example 升级为框架真实装配（startContentRuntime + createPanelHost + setupPageIntegration），chrome-smoke 扩四段断言真机全绿（canvas 造大图自包含零网络依赖）
+- [ ] 品牌 Chrome 137+ 禁 --load-extension（playwright 助手与 chrome-smoke 均已注记；Chrome for Testing/Chromium 不受限）
 - [ ] 分层 eslint 第二刀（session/api/panel/content 值级 import 禁令）——no-restricted-imports 无法区分 import type，暂以 verbatimModuleSyntax + review 守
+- [ ] npm link 联调 DX——产品 #2 接入时验证
 
 ## Decisions Made
 
@@ -67,7 +68,8 @@
 ## Evidence of Completion
 
 - [x] 10/10 特性 done（feature_list.json 全带 evidence 与抽离 commit）
-- [x] `./init.sh` 三步绿（最终轮）：eslint+tsc 零错误 / vitest **220 tests (21 files)** / tsdown 十入口 + assert-exports「10 入口对齐」
-- [x] Chrome 真机三断言（scripts/chrome-smoke.mjs，EXIT=0 两轮）
+- [x] `./init.sh` 三步绿：eslint+tsc 零错误 / vitest **220 tests (21 files)** / tsdown 十入口 + assert-exports「10 入口对齐」
+- [x] Chrome 真机冒烟四段全绿（scripts/chrome-smoke.mjs，EXIT=0）：①扩展加载+content 注入 ②面板开合全链（框架 /panel） ③ns 三名字 console 实证 ④**徽标抓图链**（canvas 造大图→自动挂徽标→点击→抓取+面板直开 R90→handoff 落 storage.session，metadata='example' 透传 F24）
 - [x] 0.1.0 可安装：pack dry-run → tarball 真装（/tmp 隔离目录）→ import('@gongxtao/extension-kit') + '/testing' + '/config' 冒烟通过
+- [x] **v0.1.0 已真实发布**：GitHub Actions release workflow 全绿（npm publish success）
 - [x] 远程仓首推：origin = github.com/gongxtao/extension-kit（私有）
