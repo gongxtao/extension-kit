@@ -1,0 +1,34 @@
+# GitHub Packages 发布管线（design.md §6：Actions GITHUB_TOKEN 发布，私有包）
+#
+# 触发：推送 v* 标签（手工 semver + CHANGELOG.md，不上 changesets）。
+# 前置：仓库 Settings → Actions → General → Workflow permissions 读/写 packages。
+# 安装侧（一次性 .npmrc + PAT read:packages，README「变更协议」节）：
+#   @gongxtao:registry=https://npm.pkg.github.com
+#   //npm.pkg.github.com/:_authToken=<PAT>
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@gongxtao'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

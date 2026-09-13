@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/config/index.ts', 'src/messaging/index.ts', 'src/io/index.ts', 'src/session/index.ts', 'src/api/index.ts', 'src/panel/index.ts', 'src/react/index.ts', 'src/content/index.ts'],
+  entry: ['src/index.ts', 'src/config/index.ts', 'src/messaging/index.ts', 'src/io/index.ts', 'src/session/index.ts', 'src/api/index.ts', 'src/panel/index.ts', 'src/react/index.ts', 'src/content/index.ts', 'src/testing/index.ts'],
   dts: true,
   format: 'esm',
   // 模块 subpath 入口随 P1 各模块落地时加入（design.md §4 九入口）；

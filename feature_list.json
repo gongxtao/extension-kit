@@ -77,8 +77,8 @@
    "name": "/testing + README + publish pipeline",
    "description": "假件工厂最小集（fakeStorageArea/fakeCookies/fakeMenus/消息假件）+ Playwright 助手 + README 装配指南（manifest/入口骨架片段）+ 变更协议 + GitHub 私有远程仓创建首推 + Packages 发布管线。出口门：0.1.0 可安装（dry-run）",
    "dependencies": ["feat-009"],
-   "status": "pending",
-   "evidence": ""
+   "status": "done",
+   "evidence": "2026-09-13（TDD 8 测试）：/testing 假件工厂最小集——createFakeStorageArea（onChanged changes 形+dump 观察缝+可编程抛错）/createFakeCookies（域过滤+逐 cookie 提交延迟+事件形）/createFakeMenus（lastError 回调通道）/createFakeContentRuntime/createFakeObserverFactory（零 vitest 依赖发布物）；playwright.ts 助手（launchExtensionOptions/extIdFromContext/openExtensionPage/injectSessionCookie/routeJson——结构类型运行时零依赖，标注品牌 Chrome 137+ 限制）；README 重写（安装/起步路径/manifest 骨架 F21/模块一览/变更协议）；.github/workflows/release.yml（v* 标签→lint+test+build+GitHub Packages）；version 0.1.0 + private:false + publishConfig registry；出口门实测：npm pack dry-run 40 files 49.4kB → tarball 真实 npm install → 根/config/testing 三入口导入可用"
   }
  ]
 }

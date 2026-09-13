@@ -1,7 +1,7 @@
 {
   "name": "@gongxtao/extension-kit",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "private": false,
   "type": "module",
   "description": "浏览器插件通用能力框架（headless 核心 + /react 逻辑 hooks）——copy-out 抽离自 ready-svg 插件（基线 95d0842）",
   "main": "./dist/index.mjs",
@@ -42,6 +42,10 @@
     "./content": {
       "types": "./dist/content/index.d.mts",
       "import": "./dist/content/index.mjs"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.mts",
+      "import": "./dist/testing/index.mjs"
     }
   },
   "peerDependencies": {
@@ -55,6 +59,13 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gongxtao/extension-kit.git"
+  },
   "scripts": {
     "lint": "eslint . && tsc --noEmit",
     "test": "vitest run",
