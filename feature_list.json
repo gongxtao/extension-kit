@@ -29,8 +29,8 @@
    "name": "/io",
    "description": "clipboard（原样）/ asset-io 核（产品 fetcher 注入化）/ flag-store（onboarding 泛化 createFlagStore(ns)）/ 存储封装。源：ready-svg lib/clipboard·asset-io·onboarding",
    "dependencies": ["feat-002"],
-   "status": "pending",
-   "evidence": ""
+   "status": "done",
+   "evidence": "2026-09-13 copy-out + 泛化（TDD 22 测试红→绿）：storage.ts StorageArea 单点定义（F8 收敛 convert-stores:23 + handoff:132 重复声明）+ onChanged 扩展形状（panel-prefs 用）；clipboard copyText 回退链原样（R116/R121 策略预检矩阵全保留）+ data 属性 ns 化缝 copyAttr 注入（§5 清单）；asset-io 核 deps 注入化 + TextResult 本地结构类型（与 /api ApiResult 结构等价，/io 底层零依赖 §4）+ filename 品牌注入（F23 零缺省，缺省 ${assetId}.svg 通用值）+ R124a 预取缓存原样；flag-store createFlagStore(area, key) 位置参（F15）键由调用方 kit.key 派生；jsdom devDep 接入（clipboard @vitest-environment jsdom）；./init.sh 三步绿 40 tests + 4 入口对齐"
   },
   {
    "id": "feat-005",

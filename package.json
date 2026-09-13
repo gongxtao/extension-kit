@@ -18,6 +18,10 @@
     "./messaging": {
       "types": "./dist/messaging/index.d.mts",
       "import": "./dist/messaging/index.mjs"
+    },
+    "./io": {
+      "types": "./dist/io/index.d.mts",
+      "import": "./dist/io/index.mjs"
     }
   },
   "files": [
@@ -31,6 +35,7 @@
   "devDependencies": {
     "@types/node": "^20.19.25",
     "eslint": "^9.39.1",
+    "jsdom": "^26.1.0",
     "tsdown": "^0.23.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.67.0",

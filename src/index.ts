@@ -23,5 +23,19 @@ export {
   type ClosePanelMessage,
   type PanelMime,
 } from './messaging';
+export {
+  copyText,
+  fetchPreviewUrl,
+  exportAndDownload,
+  createPreviewPrefetch,
+  createFlagStore,
+  svgBlob,
+  type AssetIoDeps,
+  type TextResult,
+  type PreviewPrefetch,
+  type FlagStore,
+  type StorageArea,
+  type StorageAreaWithOnChanged,
+} from './io';
 
 export const KIT_NAME = '@gongxtao/extension-kit';
