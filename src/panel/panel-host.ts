@@ -1,5 +1,5 @@
 /**
- * panel-host —— 页内 iframe 面板宿主（源 feat-011，R87–R90 / R96–R98；近原样 copy-out）
+ * panel-host —— 页内 iframe 面板宿主（R87–R90 / R96–R98）
  *
  * Monica 式架构：content script 在页面 DOM 挂 Shadow DOM 宿主（fixed 右缘、
  * 100vh、最顶层——R59 body 末位顶层口径），内嵌 chrome-extension://…/panel.html
@@ -71,7 +71,7 @@ export interface PanelHost {
   destroy(): void;
 }
 
-/** 源 R98 边线视觉缺省（用户两轮修订：去影留线 → 线更浅） */
+/** R98 边线视觉缺省（用户两轮修订：去影留线 → 线更浅） */
 const DEFAULT_BORDER_STYLE = '1px solid rgba(0,0,0,.05)';
 
 export function createPanelHost(deps: PanelHostDeps): PanelHost {

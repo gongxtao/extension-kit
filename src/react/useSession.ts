@@ -1,6 +1,6 @@
 /**
- * useSession —— 登录态状态机（近原样 copy-out 自 ready-svg useSession.ts，
- * feat-003 Task 6 + feat-012 R101 账户摘要缓存；逻辑 hooks 走 /react 子路径，
+ * useSession —— 登录态状态机（
+ * R101 账户摘要缓存；逻辑 hooks 走 /react 子路径，
  * react 为 peerDependency——design.md D3 修订）
  *
  * 数据流：store.watch 的会话快照只当「有变化」信号，统一重走完整 load
@@ -21,7 +21,7 @@
  *   周期 = 登录生命周期；stale 轮不清——logout 已自清，防重复）。
  * - meCache 缺省（未注入）→ 整套缓存行为旁路，退化为基础语义。
  *
- * 失败语义（源任务裁定 + feat-012 精化）：
+ * 失败语义（裁定 + 精化）：
  * - 无登录证据（本挂载内从未落过 signedIn）时任何不成功（无会话 /
  *   authentication_required / request_failed）一律落 signedOut + me null——不卡
  *   loading、不误报登录；
@@ -99,7 +99,7 @@ export function useSession<TMe>(
 
   const aliveRef = useRef(true);
   const loadSeqRef = useRef(0);
-  /** 登录证据（feat-012）：本挂载内曾落过 signedIn（乐观或权威）——request_failed
+  /** 登录证据：本挂载内曾落过 signedIn（乐观或权威）——request_failed
    *  时的保持判据；signedOut 落态与 logout() 翻 false */
   const evidenceRef = useRef(false);
 
@@ -143,7 +143,7 @@ export function useSession<TMe>(
           return;
         }
         if (result.code === 'request_failed' && evidenceRef.current) {
-          return; // feat-012 精化：有登录证据时服务端故障 ≠ 登出——保持现态
+          return; // 精化：有登录证据时服务端故障 ≠ 登出——保持现态
         }
         // 真登出信号（signed_out 短路 / authentication_required）：清缓存 + 落登出
         evidenceRef.current = false;

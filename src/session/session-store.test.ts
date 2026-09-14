@@ -10,11 +10,11 @@ import type { StoredSession } from './session-codec';
 const config: SessionStoreConfig = {
   supabaseUrl: 'https://test-ref.supabase.co',
   supabasePublishableKey: 'sb_publishable_test-key',
-  webOrigin: 'https://readysvg.net',
+  webOrigin: 'https://myproduct.app',
   sessionCookieName: 'sb-test-ref-auth-token',
 };
 const NAME = config.sessionCookieName;
-const HOST = 'readysvg.net';
+const HOST = 'myproduct.app';
 const NOW_MS = 1_700_000_000_000;
 const BASE_SEC = NOW_MS / 1000; // 1_700_000_000（Supabase expires_at 秒约定）
 const DAY = 24 * 3600;
@@ -87,7 +87,7 @@ const setup = (fetchMock: Mock<typeof fetch> = vi.fn<typeof fetch>(), fake = cre
   const advance = (ms: number): void => {
     nowMs += ms;
   };
-  /** 按编码布局种 cookie（默认种在 readysvg.net；传 url 可种去他域） */
+  /** 按编码布局种 cookie（默认种在 myproduct.app；传 url 可种去他域） */
   const seed = async (s: StoredSession, url = config.webOrigin): Promise<void> => {
     for (const c of encodeSessionCookies(NAME, s)) {
       await fake.cookies.set({
@@ -109,7 +109,7 @@ const soleCall = (fetchMock: Mock<typeof fetch>) => {
 };
 
 describe('session store（feat-003 Task 5，R8 DI：cookies/fetch/now 全注入）', () => {
-  it('getSession：从 fake cookies 解出 session（getAll 域过滤 readysvg.net）；缺失/仅他域同名 → null', async () => {
+  it('getSession：从 fake cookies 解出 session（getAll 域过滤 myproduct.app）；缺失/仅他域同名 → null', async () => {
     const { store, seed } = setup();
     expect(await store.getSession()).toBeNull(); // 无 cookie
 

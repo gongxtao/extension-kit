@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi, type Mock } from 'vitest';
 import { copyText } from './clipboard';
 
 /**
- * copyText 测试——copy-out 自 ready-svg clipboard.test.ts（R116/R121 矩阵全保留）。
+ * copyText 测试——R116/R121 回退链矩阵。
  *
  * jsdom 缺省无 navigator.clipboard、无 document.execCommand 实现——各用例
  * 自行桩定：clipboard 用 Object.defineProperty（configurable 可删还原），

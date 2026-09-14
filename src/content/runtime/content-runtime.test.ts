@@ -10,8 +10,8 @@ import { kitMessages } from '../../messaging/kitMessages';
 import type { PanelHost } from '../../panel/panel-host';
 
 /**
- * content 运行时测试——copy-out 自 ready-svg entrypoints/content/index.test.ts
- * （扫描/去抖/补扫/R46 点击链/R49 接收/R53 兜底/R90 直开矩阵全保留）。
+ * content 运行时测试——
+ * （扫描/去抖/补扫/R46 点击链/R49 接收/R53 兜底/R90 直开矩阵）。
  * 泛化适配（F17/F24/F26）：消息 kind 走 kitMessages('testkit')；source 值由装配
  * 注入（框架零站点知识——原 hostname→sourceOf 分化测试改为注入分化）；extract
  * 注入缝替代 grabImage；CDN 兜底须源声明 decodeCdn（F5/F26）。
@@ -26,7 +26,7 @@ const TOO_LARGE_TEXT = 'Image too large — download it, then upload';
 const BADGE_DEPS = {
   badgeAttr: BADGE_ATTR,
   cssNames: { spin: 'testkit-spin', shake: 'testkit-shake' },
-  ariaLabel: 'Convert with Ready SVG',
+  ariaLabel: 'Convert with Extension Kit',
   fallbackText: FALLBACK_TEXT,
   tooLargeText: TOO_LARGE_TEXT,
   branding: {
@@ -446,7 +446,7 @@ describe('content 运行时（扫描 + R46 点击链组装 + R49 接收）', () 
     expect(h.ph.calls.toggle).toBe(1);
     h.fire({ kind: MESSAGES.showPanel.kind });
     expect(h.ph.calls.show).toBe(1);
-    h.fire({ kind: 'rsvg-unknown' }); // 杂讯不误触
+    h.fire({ kind: 'unknown-kind' }); // 杂讯不误触
     expect(h.ph.calls.toggle).toBe(1);
     expect(h.ph.calls.show).toBe(1);
   });

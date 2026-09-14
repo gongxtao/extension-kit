@@ -1,7 +1,7 @@
 /**
- * me-cache —— 账户快照乐观缓存（源 feat-012/R101 泛型化，F3/F7/F15 + §5 键 ns 化）
+ * me-cache —— 账户快照乐观缓存（R101 语义，F3/F7/F15 + §5 键 ns 化）
  *
- * 动机（源语义随码走）：面板每次打开都同步探测 /api/me（1-2s 网络往返），期间
+ * 动机：面板每次打开都同步探测 /api/me（1-2s 网络往返），期间
  * 已登录用户每次开面板都要闪一遍 loading。而登录态的权威信号是 cookie（watch
  * 双向同步独立工作），/api/me 只是显示数据。
  *
@@ -12,7 +12,7 @@
  *
  * 泛型化（F3/F7/F15 + 本实现补裁定）：
  * - `MeInfo` 完全归产品（F3）——value: T 泛型，isMeInfo 硬 import 换 validate
- *   守卫注入缝（ready-svg 消费侧传 isMeInfo 即适配）
+ *   守卫注入缝（消费侧传自己的 isXxx 即适配）
  * - 条目字段源 `me` 更名 `value`（F3）
  * - 签名 `createMeCache<T>(area, validate, key, now?)`：F15 收紧后位置参按序追加；
  *   §5 键 ns 化要求 key 缝（F7/F15 文本漏列，实现按 F15 规则补位——键经

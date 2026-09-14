@@ -11,7 +11,7 @@ import {
 import type { StorageArea } from '../../io/storage';
 
 /**
- * runtime/handoff 测试——copy-out 自 ready-svg handoff.test.ts 的 store/编解码/TTL
+ * runtime/handoff 测试——store/编解码/TTL
  * 矩阵（R46/R47 全保留）。泛化适配：键注入（kit.key('image-handoff') 派生口径，
  * 测试用 testkit-image-handoff）；消息守卫矩阵已归 /messaging kitMessages 测试
  * （F12 计数口径——ack 是返回类型不占 kind）；source → metadata 透传（F17/F24，

@@ -1,6 +1,6 @@
 /**
- * runtime/background —— background 装配面（近原样 copy-out 自 ready-svg
- * entrypoints/background/index.ts 的 setupPageIntegration；review3 修订 F13：
+ * runtime/background —— background 装配面（
+ * review3 修订 F13：
  * 整体参数化进框架——菜单 id/文案硬编码在函数体内物理切不开，保持函数结构 +
  * 参数化才是 copy-out 纪律，与 content 侧 startContentRuntime(deps) 对称）
  *
@@ -95,7 +95,7 @@ export function setupPageIntegration(ctx: PageIntegrationCtx, opts: PageIntegrat
 
   // R97 菜单幂等（官方模式）：菜单持久化跨 SW 生命周期，每次唤醒 removeAll 清场再建——
   // 永不撞 duplicate id；create 回调显式消费错误（Chrome 的 lastError 是回调式通道，
-  // try/catch 捕不到、无回调时控制台打 Unchecked runtime.lastError——源轮病根）
+  // try/catch 捕不到、无回调时控制台打 Unchecked runtime.lastError——历史病根）
   ctx.menus.removeAll(() => {
     ctx.menus.create(
       {

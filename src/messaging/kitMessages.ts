@@ -1,8 +1,8 @@
 /**
  * kitMessages —— 框架内置消息协议（design.md §5，7 kind）
  *
- * 形状提炼自 ready-svg handoff.ts 的 6 消息形（R46/R49/R53/R90）+ panel-host.ts
- * 的 close-panel（R88）——散在两文件的协议工厂化为 kitMessages(ns)。
+ * 形状 = 7 内置消息形（R46/R49/R53/R88/R90 裁定）
+ * ——kitMessages(ns) 集中定义。
  *
  * - 面板三件（toggle/show/close-panel）+ 抓取两件（grab/cdn-grab）+ handoff 双向
  *   （image-handoff / handoff-consumed）；ack 是 sendMessage 返回类型不占 kind（F12）
@@ -15,7 +15,7 @@
 
 export type PanelMime = 'image/png' | 'image/jpeg';
 
-/** content → background：抓取成功交接（源 ImageHandoffMessage；source → metadata） */
+/** content → background：抓取成功交接（source → metadata 透传） */
 export interface ImageHandoffMessage {
   kind: string;
   base64: string;
@@ -24,18 +24,18 @@ export interface ImageHandoffMessage {
   requestedAt: number;
 }
 
-/** background → content：右键菜单/菜单转发抓取（源 GrabRequestMessage） */
+/** background → content：右键菜单/菜单转发抓取 */
 export interface GrabRequestMessage {
   kind: string;
   srcUrl: string;
 }
 
-/** content → background：面板已消费交接内容（源 HandoffConsumedMessage） */
+/** content → background：面板已消费交接内容 */
 export interface HandoffConsumedMessage {
   kind: string;
 }
 
-/** content → background：CDN 兜底请求（源 CdnGrabMessage；source → metadata，F24 双通道） */
+/** content → background：CDN 兜底请求（metadata 透传，F24 双通道） */
 export interface CdnGrabMessage {
   kind: string;
   srcUrl: string;
@@ -43,17 +43,17 @@ export interface CdnGrabMessage {
   metadata?: unknown;
 }
 
-/** background → content：面板开↔关（源 TogglePanelMessage） */
+/** background → content：面板开↔关 */
 export interface TogglePanelMessage {
   kind: string;
 }
 
-/** background → content：面板幂等开（源 ShowPanelMessage） */
+/** background → content：面板幂等开 */
 export interface ShowPanelMessage {
   kind: string;
 }
 
-/** panel.html → 宿主（iframe postMessage）：面板页请求关闭（源 panel-host CLOSE_MESSAGE） */
+/** panel.html → 宿主（iframe postMessage）：面板页请求关闭（iframe postMessage 通路） */
 export interface ClosePanelMessage {
   kind: string;
 }
@@ -86,7 +86,7 @@ export interface KitMessages {
   closePanel: MessageEntry<ClosePanelMessage>;
 }
 
-/** 框架内置协议：ns 一根线派生 7 kind（源形 ns='rsvg' 逐字节等价，§5 清单） */
+/** 框架内置协议：ns 一根线派生 7 kind（§5 清单） */
 export const kitMessages = (ns: string): KitMessages => {
   const entry = <T>(
     suffix: string,

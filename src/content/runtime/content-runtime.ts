@@ -1,6 +1,6 @@
 /**
- * runtime/content-runtime —— 目标无关内容运行时（近原样 copy-out 自 ready-svg
- * entrypoints/content/index.ts 的 startContentScript；扫描机制归运行时，
+ * runtime/content-runtime —— 目标无关内容运行时（
+ * 扫描机制归运行时，
  * 候选判定归抓取源——F26 调用时序）
  *
  * 职责：
@@ -52,7 +52,7 @@ export interface ContentRuntime {
 
 /** DOM 读取面（jsdom 测试靠 defineProperty/getBoundingClientRect 桩）。
  *  宽高属性缺席 = undefined（非 0）——Number(null)===0 陷阱曾把所有 CSS 定尺寸的
- *  真实站图片判成 ≤32 图标排除（gemini 冒烟 2026-08-24 发现，回归守卫见测试） */
+ *  真实站图片判成 ≤32 图标排除（历史真机回归发现，守卫见测试） */
 export function readTargetInfo(img: HTMLImageElement): TargetInfo {
   const rawW = img.getAttribute('width');
   const rawH = img.getAttribute('height');

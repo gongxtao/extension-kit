@@ -1,5 +1,5 @@
 /**
- * clipboard —— 剪贴板写回退链（源 R116 + 复烟修复 R121 随码带走）
+ * clipboard —— 剪贴板写回退链（R116 + 复烟修复 R121）
  *
  * 面板是嵌在宿主页里的跨源 iframe——clipboard-write 权限策略默认 allowlist
  * 为顶层同源，navigator.clipboard 在页内面板形态被拒。链路：
@@ -14,7 +14,7 @@
  *
  * 两层都败 → false（调用方静默不显 ✓，沿 R23 口径不弹错）。
  *
- * 泛化缝（§5 清单 data 属性 ns 化）：源写死 data-rsvg-copy 标记 → copyAttr
+ * 泛化缝（§5 清单 data 属性 ns 化）：标记属性名经 copyAttr
  * 参数注入（调用方传 kit.dataAttr('copy')）；不传不设属性（框架零缺省）。
  */
 

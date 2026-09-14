@@ -1,12 +1,12 @@
 /**
  * storage —— StorageArea 结构类型单点定义（review2 修订 F8）
  *
- * 源定义散在 convert-stores.ts:23（却被 me-cache/onboarding/panel-prefs 依赖）、
- * handoff.ts:132（HandoffStorageArea 重复声明）——框架收敛到 /io 单点。
+ * get/set/remove 子集单点定义；
+ * 
  * 真实现直接传 chrome.storage.local / .session（结构兼容子集）。
  *
- * 扩展形状（F8）：含 onChanged 订阅——源 panel-prefs 以独立注入参数携带，
- * 框架升为扩展接口，随 feat-007 /panel 消费。
+ * 扩展形状（F8）：含 onChanged 订阅（panel-prefs 用），
+ * 
  */
 
 /** chrome.storage.StorageArea 结构子集（get/set/remove） */

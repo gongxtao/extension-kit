@@ -3,98 +3,131 @@
   {
    "id": "feat-001",
    "name": "Harness & toolchain bootstrap",
-   "description": "harness 五子系统落地（CLAUDE.md 启动头含落地质则 / feature_list / progress / init.sh / session-handoff）+ 工具链骨架（tsdown/vitest/eslint/tsc + src 占位 + 根入口 smoke 测试），init.sh 三步真实可跑",
+   "description": "harness 五子系统落地（CLAUDE.md 启动头 / feature_list / progress / init.sh / session-handoff）+ 工具链骨架（tsdown/vitest/eslint/tsc + src 占位 + smoke 测试），init.sh 三步真实可跑",
    "dependencies": [],
    "status": "done",
-   "evidence": "2026-09-12 harness-creator skill 打底 + ready-svg 惯例全量定制：CLAUDE.md（启动头+落地质则铁律）/ feature_list 10 特性种子 / progress / init.sh 三步 fail-fast；工具链 tsdown 0.23+vitest 4.1+eslint 9.39+tsc 5.9（与 ready-svg extension 同版本钉齐）；./init.sh 三步 EXIT=0 实跑两轮（lint 零输出 / Tests 1/1 / dist 0.83 kB）；实装期捕出并修正包入口与 tsdown 实产不匹配（.js→.mjs）；详见 progress.md Evidence"
+   "evidence": "2026-09-12：harness 四件套定制 + 工具链骨架；./init.sh 三步 EXIT=0 实跑两轮；实装期捕出并修正包入口与 tsdown 实产不匹配（.js→.mjs）"
   },
   {
    "id": "feat-002",
    "name": "P0 remainder: /config createKit + example plugin",
-   "description": "createKit 脊椎（TDD：ns 派生键/消息 kind/DOM id 全断言，docs/design.md §5）+ example/ 最小示例插件（createKit 装配 + panel 骨架 + workspace 引用）。出口门：init.sh 绿 + Chrome 手动加载三断言（加载成功/面板开合/键-消息-DOM id）",
-   "dependencies": ["feat-001"],
+   "description": "createKit 脊椎（TDD：ns 派生键/消息 kind/DOM id 全断言，design.md §5）+ example/ 最小示例插件。出口门：init.sh 绿 + Chrome 加载三断言",
+   "dependencies": [
+    "feat-001"
+   ],
    "status": "done",
-   "evidence": "2026-09-13 TDD：createKit.test 先红后绿（7 测试全过——§5 全量清单 ns='rsvg' 逐字节等价 + ns='testkit' 参数化 + namespace [a-z0-9]+ 校验 + 无状态纯派生，F20 契约）；tsdown/package.json 双入口（./config）+ §6 导出路径断言固化（scripts/assert-exports.mjs，build 步末尾）；根入口重导出 createKit+全类型；example/ 最小 WXT 插件（wxt 0.21.4 + file:.. 引用框架 dist；background 菜单+toolbar 消息 / content iframe 宿主+开合 / panel.html Close 按钮——装配形态照 ready-svg）；出口门：./init.sh 三步绿（7 tests + exports 2 入口对齐）+ Chrome 真机三断言全过（scripts/chrome-smoke.mjs 可脚本化冒烟，EXIT=0 复跑两轮：扩展加载注入 / toggle-开+Close-关+toggle-再开再关 / console 三属性 exkit-me-cache·exkit-toggle-panel·exkit-panel-host）；品牌 Chrome 137+ 禁 --load-extension 须 UI 载入一次（README 记录）"
+   "evidence": "2026-09-13：TDD 7 测试（派生全表 + ns 参数化 + [a-z0-9]+ 校验 + 无状态）；exports 断言固化（scripts/assert-exports.mjs）；example WXT 插件 + chrome-smoke 三断言真机 EXIT=0 复跑两轮；品牌 Chrome 137+ 须 UI 载入（README 记录）"
   },
   {
    "id": "feat-003",
    "name": "/messaging",
-   "description": "defineMessages 轻量工厂（ns 前缀类型 + 守卫；畸形消息静默丢弃）+ kitMessages 框架内置协议。源：ready-svg handoff.ts 内 7 消息形提炼（溯源表 §9）",
-   "dependencies": ["feat-002"],
+   "description": "defineMessages 轻量工厂（ns 前缀类型 + 守卫；畸形消息静默丢弃）+ kitMessages 框架内置 7 kind 协议",
+   "dependencies": [
+    "feat-002"
+   ],
    "status": "done",
-   "evidence": "2026-09-13 TDD 红→绿（11 测试）：kitMessages(ns) 内置 7 kind（面板三件+抓取两件+handoff 双向，ns='rsvg' 与源字面量逐字节等价）——payload 形状照源但 source 站点值域泛化为 metadata?: unknown 透传（F17/F24，框架零站点知识）；守卫矩阵逐条 copy 自源 is* 矩阵（畸形静默拒纪律继承）；defineMessages(ns, defs) 工厂（§5 钉死形状：kind 缺省 camelCase→kebab 派生、显式覆盖、payload 产品守卫注入）；ack 不占 kind（F12，归 /content/handoff）；./init.sh 三步绿（18 tests + exports 3 入口对齐）"
+   "evidence": "2026-09-13：TDD 11 测试——7 kind + 守卫矩阵（畸形静默拒）；source 值域泛化为 metadata 透传（F17/F24 框架零站点知识）；ack 不占 kind（F12）"
   },
   {
    "id": "feat-004",
    "name": "/io",
-   "description": "clipboard（原样）/ asset-io 核（产品 fetcher 注入化）/ flag-store（onboarding 泛化 createFlagStore(ns)）/ 存储封装。源：ready-svg lib/clipboard·asset-io·onboarding",
-   "dependencies": ["feat-002"],
+   "description": "clipboard（回退链）/ asset-io 核（fetcher 注入化）/ flag-store / StorageArea 单点定义",
+   "dependencies": [
+    "feat-002"
+   ],
    "status": "done",
-   "evidence": "2026-09-13 copy-out + 泛化（TDD 22 测试红→绿）：storage.ts StorageArea 单点定义（F8 收敛 convert-stores:23 + handoff:132 重复声明）+ onChanged 扩展形状（panel-prefs 用）；clipboard copyText 回退链原样（R116/R121 策略预检矩阵全保留）+ data 属性 ns 化缝 copyAttr 注入（§5 清单）；asset-io 核 deps 注入化 + TextResult 本地结构类型（与 /api ApiResult 结构等价，/io 底层零依赖 §4）+ filename 品牌注入（F23 零缺省，缺省 ${assetId}.svg 通用值）+ R124a 预取缓存原样；flag-store createFlagStore(area, key) 位置参（F15）键由调用方 kit.key 派生；jsdom devDep 接入（clipboard @vitest-environment jsdom）；./init.sh 三步绿 40 tests + 4 入口对齐"
+   "evidence": "2026-09-13：TDD 22 测试——StorageArea 单点（F8）+ onChanged 扩展形状；clipboard R116/R121 矩阵 + copyAttr ns 化缝；asset-io filename 品牌注入（F23）；flag-store (area, key) 位置参（F15）"
   },
   {
    "id": "feat-005",
    "name": "/session",
-   "description": "session-codec / auth-rest / session-store（近原样，已 DI）+ me-cache 泛型化（最小身份契约 { userId }，键 ns 化）。Supabase 特定保留。源：ready-svg lib/session-*·me-cache",
-   "dependencies": ["feat-002"],
+   "description": "session-codec / auth-rest / session-store（已 DI）+ me-cache 泛型化（最小身份契约 { userId }，键 ns 化）。Supabase 特定保留",
+   "dependencies": [
+    "feat-002"
+   ],
    "status": "done",
-   "evidence": "2026-09-13 copy-out + 泛化（TDD 38 测试）：session-codec 近原样（ssr 0.6.1 对齐不变量与等价性论证注释随码走）；auth-rest 近原样 + SupabaseAuthConfig 结构子集（F19/F23 装配注入）；session-store 近原样（single-flight L6 / 写代次终审 I-2 / watch 重读串行化修复轮一全部矩阵 12 测试随码带走，SessionStoreConfig 四字段全链）；me-cache 泛型化 createMeCache<T>(area, validate, key, now?)——value 更名（F3）/ validate 守卫注入（F7）/ 位置参（F15）/ key 缝按 F15 规则补位并回 design.md 记裁定；init.sh 三步绿 78 tests + 5 入口对齐"
+   "evidence": "2026-09-13：TDD 38 测试——single-flight / 写代次守卫 / watch 串行化矩阵；me-cache createMeCache<T>(area, validate, key, now?)（key 缝按 F15 规则补位并回 design.md 记裁定）"
   },
   {
    "id": "feat-006",
    "name": "/api",
-   "description": "apiFetch 传输骨架（Bearer/401 映射/信封守卫/multipart/raw 双通道）——MeInfo 完全归产品，/api 纯传输。源：ready-svg lib/api-client.ts 传输核",
-   "dependencies": ["feat-005"],
+   "description": "apiFetch 传输骨架（Bearer/401 映射/信封守卫/multipart/raw 双通道）——纯传输，账户形状归产品",
+   "dependencies": [
+    "feat-005"
+   ],
    "status": "done",
-   "evidence": "2026-09-13 copy-out（TDD 12 测试）：apiFetch 传输核近原样（signed_out 短路不发请求 / 401 authentication_required 穿透 / 500·网络拒·信封畸形归 request_failed 严格区分 / POST JSON / FormData multipart 引用直传 / raw text 双通道矩阵全保留）；MeInfo 与端点函数（fetchMe 等）不进框架（F3 MeInfo 归产品）；StoredSession 类型级引用 /session（§4 分层纪律）；init.sh 三步绿 90 tests + 6 入口对齐"
+   "evidence": "2026-09-13：TDD 12 测试——signed_out 短路 / 401 穿透 / request_failed 归拢 / POST JSON / FormData / raw 矩阵全保留"
   },
   {
    "id": "feat-007",
    "name": "/panel",
-   "description": "panel-host / panel-prefs（键/消息/DOM id ns 化；panel.html 地址/宽度/边线样式可配）。源：ready-svg lib/panel-host·panel-prefs",
-   "dependencies": ["feat-003"],
+   "description": "panel-host / panel-prefs（键/消息/DOM id ns 化；panel.html 地址/宽度/边线样式可配）",
+   "dependencies": [
+    "feat-003"
+   ],
    "status": "done",
-   "evidence": "2026-09-13 copy-out + 泛化（TDD 27 测试红→绿）：panel-prefs 近原样（R85/R96 矩阵全保留）+ keys 缝注入 {mode,width}（§5 键 ns 化，kit.key 派生口径）；panel-host 近原样（squeeze 记原值还原 F22 / 拖拽 clamp / 跨标签同步 / 杂讯不误触矩阵全保留）+ domId/closeMessage/resizeAttr 三注入缝（kit.domId/kind/dataAttr 派生）+ ariaLabel 零缺省（F23 产品文案）+ borderStyle 覆盖通用视觉缺省（F23）+ getPanelUrl 地址可配（源本 DI）；init.sh 三步绿 117 tests + 7 入口对齐"
+   "evidence": "2026-09-13：TDD 27 测试——prefs keys 注入；host domId/closeMessage/resizeAttr 注入 + ariaLabel 零缺省（F23）+ borderStyle 可覆盖"
   },
   {
    "id": "feat-008",
    "name": "/react (useSession)",
-   "description": "逻辑 hooks 子路径（react peerDependency）：useSession 迁入（近原样，编排已 DI）。源：ready-svg lib/useSession.ts + 433 行测试随迁（@testing-library/react 为 devDep）",
-   "dependencies": ["feat-005"],
+   "description": "逻辑 hooks 子路径（react peerDependency）：useSession（乐观首绘 + TTL 节流 + 登录证据保持）",
+   "dependencies": [
+    "feat-005"
+   ],
    "status": "done",
-   "evidence": "2026-09-13 copy-out + 泛型化（TDD 18 测试全绿）：useSession<TMe> 近原样（loadSeq 轮次/evidenceRef 登录证据/乐观首绘/TTL 节流/request_failed 保持现态矩阵全保留）+ F3/F19 泛化——fetchMe 硬 import → fetchAccount 注入（产品用 /api apiFetch 封装，测试即此形态）、config.webOrigin 缺省 → baseUrl 必填、账户形状泛型 TMe、meCache 条目 value 字段；react 可选 peerDependency（/react 子路径隔离，根入口零 react）；测试 harness 踩坑记录：api 对象须构造于 render 外（新函数引用 → useEffect 重跑死循环）；init.sh 三步绿 135 tests + 8 入口对齐"
+   "evidence": "2026-09-13：TDD 18 测试——TMe 泛型 + fetchAccount/baseUrl 注入（F3/F19 框架零端点零站点知识）；react 可选 peer（/react 隔离，根入口零 react）"
   },
   {
    "id": "feat-009",
    "name": "/content",
-   "description": "目标无关运行时（徽标三态机/悬停隐现/顶层重挂 + storage.session 交接通道 + 扫描机制）+ capture source 接口（discover/eligibility/extract/decodeCdn 可选）+ 图片抓取源（page-image 泛化）+ cdn 代理取字节层。源：ready-svg lib/badge-overlay·page-image·handoff + content 入口扫描机制",
-   "dependencies": ["feat-003", "feat-004"],
+   "description": "目标无关运行时（徽标三态机/悬停隐现/顶层重挂 + storage.session 交接通道 + 扫描机制）+ CaptureSource 接口 + 图片抓取源 + CDN 兜底 + background 装配面",
+   "dependencies": [
+    "feat-003",
+    "feat-004"
+   ],
    "status": "done",
-   "evidence": "2026-09-13 copy-out + 泛化（TDD 77 测试红→绿）：capture/types CaptureSource 契约（F26——isTarget 复核同函数 F9/extract/decodeCdn 声明式 opt-in F5；EXTRACT_MAX_BYTES 通道上限 F18）；capture/image imageCapture（R42 阈值矩阵全保留+阈值可覆盖、R45 两路链+sourceOf 站点映射删除 F17 值域归产品、makeDom/makeOffscreen 双转码面）；runtime/handoff store 键注入 + metadata 透传零值域（F17/F24）+ 编解码/TTL 矩阵；badge-overlay 三态机/悬停隐现/顶层重挂（R58/R59 矩阵全保留）+ F23 品牌色/图形 path/双文案/aria 注入零缺省 + CSS 动画名/attr ns 化注入 + cornerFor 角位策略注入；content-runtime 扫描/去抖/补扫/R46 点击链/R49 接收/R53 兜底/R90 直开矩阵全保留（F26 时序：isTarget 复核→extract→可救败+decodeCdn 声明才兜底）；background F13 整体参数化（菜单 id/title/contexts 注入 + SW 唤醒 removeAll 幂等 + lastError 回调消费矩阵）；§4 分层 eslint 第一刀（底层零依赖钉死）；init.sh 三步绿 212 tests + 9 入口对齐"
+   "evidence": "2026-09-13：TDD 77 测试——CaptureSource 契约（F26：isTarget 复核同函数 F9/decodeCdn 声明式 opt-in F5）；imageCapture 阈值可覆盖 + 双转码面；handoff 键注入 + metadata 透传；badge F23 品牌注入 + CSS 名 ns 化；runtime/background 矩阵全保留；§4 分层 eslint 第一刀"
   },
   {
    "id": "feat-010",
    "name": "/testing + README + publish pipeline",
-   "description": "假件工厂最小集（fakeStorageArea/fakeCookies/fakeMenus/消息假件）+ Playwright 助手 + README 装配指南（manifest/入口骨架片段）+ 变更协议 + GitHub 私有远程仓创建首推 + Packages 发布管线。出口门：0.1.0 可安装（dry-run）",
-   "dependencies": ["feat-009"],
+   "description": "假件工厂最小集 + Playwright 助手 + README 装配指南 + 变更协议 + GitHub 私有远程仓 + Packages 发布管线。出口门：0.1.0 可安装",
+   "dependencies": [
+    "feat-009"
+   ],
    "status": "done",
-   "evidence": "2026-09-13（TDD 8 测试）：/testing 假件工厂最小集——createFakeStorageArea（onChanged changes 形+dump 观察缝+可编程抛错）/createFakeCookies（域过滤+逐 cookie 提交延迟+事件形）/createFakeMenus（lastError 回调通道）/createFakeContentRuntime/createFakeObserverFactory（零 vitest 依赖发布物）；playwright.ts 助手（launchExtensionOptions/extIdFromContext/openExtensionPage/injectSessionCookie/routeJson——结构类型运行时零依赖，标注品牌 Chrome 137+ 限制）；README 重写（安装/起步路径/manifest 骨架 F21/模块一览/变更协议）；.github/workflows/release.yml（v* 标签→lint+test+build+GitHub Packages）；version 0.1.0 + private:false + publishConfig registry；出口门实测：npm pack dry-run 40 files 49.4kB → tarball 真实 npm install → 根/config/testing 三入口导入可用；**追加收口（同日）**：example 升级为框架真实装配（/content startContentRuntime+createPanelHost+setupPageIntegration）并通过扩展版 chrome-smoke 四段断言——徽标抓图链真机全绿（canvas 造大图→自动挂徽标→点击→抓取+面板直开 R90→handoff 落 storage.session metadata 透传 F24），P2 出口门完整闭合"
+   "evidence": "2026-09-13：TDD 8 测试（假件零 vitest 依赖）+ playwright 助手（结构类型零依赖）+ release.yml；出口门实测 pack→tarball 真装→三入口导入；example 升级真实装配后 chrome-smoke 四段全绿（P2 出口门闭合）；v0.1.0 Actions 发布 workflow 全绿"
   },
   {
    "id": "feat-011",
-   "name": "demo: 框架端到端消费验证插件（用户指令 2026-09-14）",
-   "description": "demo/ 独立 WXT 插件（ns=demokit）作为『最小消费者』端到端验证框架：/config kit 装配 + /content 徽标抓图链（imageCapture+badge+handoff）+ /panel 面板宿主与 prefs + 面板页渲染抓取内容（isFresh TTL + metadata 胶囊）/ Copy（/io clipboard）/ 首开标记（flag-store）/ 模式切换（panel-prefs）。范围裁定：/session /api /react 不接真实后端（demo 无后端；三模块已由 68 个单测覆盖），demo 单测消费 /testing 假件完成闭环。出口门：init.sh 绿（demo 单测纳入根基线）+ demo compile/build 绿 + demo-smoke 真机全断言（徽标→点击→面板渲染内容→copy→flag→mode 持久化）",
-   "dependencies": ["feat-010"],
+   "name": "demo: 框架端到端消费验证插件",
+   "description": "demo/ 独立 WXT 插件（ns=demokit）作为最小消费者：徽标抓图链 + 面板渲染（isFresh TTL + metadata 胶囊）+ Copy + 首开标记 + 模式切换。范围裁定：/session /api /react 不接后端（demo 无后端）。出口门：init.sh 绿 + compile/build 绿 + demo-smoke 真机全断言",
+   "dependencies": [
+    "feat-010"
+   ],
    "status": "done",
-   "evidence": "2026-09-14 harness 流程全程（登记→TDD→实现→验证→收口）：TDD 视图模型 8 测试红→绿（handoffToView 空态/ready/stale R47 TTL + metadataLabel F24 展示层格式化；纳入根基线 228 tests）；demo compile/build 绿（33.39 kB）；UI 载入后 scripts/demo-smoke.mjs 六断言真机全绿复跑两轮（第二轮 mode 断言 overlay→squeeze 翻转同时证明跨运行持久化）：①扩展加载 ②canvas 造大图→自动挂徽标→点击→抓取+面板直开 R90 ③handoff 落 storage.session（metadata=demo-page+本轮新鲜度防旧记录冒充）④面板渲染 img dataUrl+胶囊+Copy 可见 ⑤首开标记 flag-store ⑥模式切换持久化 panel-prefs；踩坑记录：新扩展载入前已开的页面须 Page.reload 才注入新 content script；冒烟断言不得写死可持久化状态值（读前值断言翻转）；init.sh 三步绿 228 tests + 10 入口对齐"
+   "evidence": "2026-09-14：TDD 视图模型 8 测试；demo-smoke 六断言真机全绿复跑两轮（第二轮 mode 翻转证明跨运行持久化）；踩坑：已开页面须 Page.reload 才注入新 content script；冒烟断言不写死可持久化状态值"
   },
   {
    "id": "feat-012",
-   "name": "docs: 新产品接入教程（用户指令 2026-09-14）",
-   "description": "docs/onboarding.md 分步接入教程（安装→ns→manifest 能力勾选→kit→background→content→panel 页→/testing 首个单测→验证 checklist→常见坑）+ 修 README 两处陈旧骨架（content 骨架误传 badge 而非 badgeDeps；background 骨架为过时占位注释——教程成文后一并修正并链接）。出口门：教程代码块逐字节组装为 demo/src/snippet-verify/ 后 demo tsc --noEmit 通过（证明教程片段对真实 API 可编译）+ 与 demo（已过真机六断言）逐段对齐 + init.sh 绿",
-   "dependencies": ["feat-011"],
+   "name": "docs: 新产品接入教程",
+   "description": "docs/onboarding.md 分步接入教程 + 修 README 两处陈旧骨架。出口门：教程代码块组装为 demo/src/snippet-verify/ 后 tsc 通过 + §6 单测真实入套件 + init.sh 绿",
+   "dependencies": [
+    "feat-011"
+   ],
    "status": "done",
-   "evidence": "2026-09-14 harness 流程全程（登记→成文→编译门→修正→收口）：docs/onboarding.md 九节（前置 .npmrc/ns 一步/manifest 按能力勾选表 F21/background 全文含 R97 lastError 注记/content 全文含 badgeDeps F23·F17/panel 页三段核心逻辑（完整参照 demo）/testing 首个单测示例/构建与真机 checklist（137+ UI 载入与阈值说明）/常见坑速查表七条/接后端指引 §9）；出口门实测：§3/§4 代码块逐段组装为 demo/src/lib/snippet-verify/{background,content}-snippet.ts（唯一差异 = kit 导入路径深一级）→ demo npx tsc --noEmit 通过（SNIPPET_TSC_OK，保留仓内作回归守）；§6 单测代码块组装为 onboarding-tutorial.test.ts 真实入套件（init.sh 229 tests 全绿）；README 修正两处陈旧骨架（content 骨架 badge 实例误传 → badgeDeps 装配面 + 注记勿自传实例；background 占位注释 → 完整骨架 + 指向教程全文）+ 起步路径头部链接教程"
+   "evidence": "2026-09-14：九节教程成文；snippet-verify 编译门 tsc 通过（留仓作回归守）；教程单测入套件（229 tests）；README badge→badgeDeps + background 全文修正"
+  },
+  {
+   "id": "feat-013",
+   "name": "docs+repo: 移除历史内部仓引用 + README 更新",
+   "description": "全仓清除对历史内部参照仓的一切引用（仓名/路径/commit/ns 前缀 rsvg/跨仓文档引用）——README 重写、CLAUDE.md 落地质则改为以本仓 design.md 与既有实现为真源、design.md 溯源章节去标识化为实施记录、源码注释去出处链（保留踩坑记录本体与 F/R 裁定编号）、测试夹具 ns 'rsvg'→'alpha'、状态三件套重写。出口门：grep 全仓（排除 node_modules/.git/dist/.omc/.workbuddy/.output）对 ready-svg|readysvg|Ready SVG|95d0842|rsvg 零命中 + ./init.sh 三步绿 + demo tsc 通过",
+   "dependencies": [
+    "feat-012"
+   ],
+   "status": "done",
+   "evidence": "2026-09-14：README 重写（状态/教程/demo 链接/变更协议）；package.json description 去标识；CLAUDE.md 落地质则改为「design.md 唯一真源 + 既有实现为行为基准」；design.md 去标识化重写（§9 改为实施记录表·源列裁剪·§10 改为演进纪律，技术契约与 F/R 裁定全保留）；src/** 39 文件注释出处链清除（保留踩坑记录本体）+ 测试夹具 ns→alpha + 夹具域名中性化 + 品牌 aria 文案中性化；状态三件套重写为当前纪元；出口门三项实测：全仓 grep 历史标识符零命中（115 处替换+两轮补刀）/ init.sh 三步绿 229 tests + 10 入口 / demo tsc 通过"
   }
  ]
 }

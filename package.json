@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "type": "module",
-  "description": "浏览器插件通用能力框架（headless 核心 + /react 逻辑 hooks）——copy-out 抽离自 ready-svg 插件（基线 95d0842）",
+  "description": "浏览器插件通用能力框架（headless 核心 + /react 逻辑 hooks）——会话/面板/抓取/消息/测试基建",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {

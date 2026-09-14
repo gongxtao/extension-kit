@@ -3,7 +3,7 @@ import { createPreviewPrefetch, exportAndDownload, fetchPreviewUrl } from './ass
 import type { AssetIoDeps } from './asset-io';
 
 /**
- * asset-io 测试——copy-out 自 ready-svg asset-io.test.ts（R38/R39/R124a 矩阵全保留）。
+ * asset-io 测试——R38/R39/R124a 矩阵。
  * 泛化点：fetch* 返回本地结构 TextResult（与 /api ApiResult<string> 结构等价，
  * /io 底层零依赖）；filename 品牌资产注入（F23 判据——框架零缺省品牌串）。
  */
@@ -56,12 +56,12 @@ describe('exportAndDownload（R38 下载链路 fetchExportSvg → Blob → downl
 
   it('filename 注入（F23 品牌资产零缺省）：产品注入 filename 回调 → download 收产品串', async () => {
     const deps = makeDeps({
-      filename: (assetId) => `ready-svg-${assetId}.svg`,
+      filename: (assetId) => `acme-${assetId}.svg`,
     });
     await exportAndDownload(deps, 'asset-9', 140);
     expect(deps.download).toHaveBeenCalledWith({
       url: 'blob:io-url',
-      filename: 'ready-svg-asset-9.svg',
+      filename: 'acme-asset-9.svg',
     });
   });
 

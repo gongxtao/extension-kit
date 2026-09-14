@@ -1,8 +1,8 @@
 /**
  * /testing 假件工厂最小集（design.md §7 P3 最小集——发布物）
  *
- * 各假件语义取自 ready-svg 测试手写假件（session-store / panel-prefs /
- * background 各测试的 fakeArea / fakeCookies / fakeCtx）固化：
+ * 假件工厂（发布物）——语义与框架各模块测试假件一致：
+ * 
  * - createFakeStorageArea：get/set/remove + onChanged（changes 形
  *   {oldValue,newValue}）+ dump 观察缝 + 可编程抛错（防御路径测试）；
  * - createFakeCookies：domain 过滤 getAll + 逐 cookie 提交（可编程延迟——

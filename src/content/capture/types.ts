@@ -1,13 +1,13 @@
 /**
  * capture/types —— 抓取源（capture source）接口契约（design.md §4，F26——D6 的兑现、
- * P2 落地依据；形状全部源自 page-image 导出面，非发明）
+ * P2 落地依据）
  *
  * 一体两面（F1）：发现（isTarget）与抓取（extract）是同一内容类型的两面，捆绑为
  * 「抓取源」，不可拆配。框架零站点知识（F17）——站点映射、来源值域、角位策略
  * 全部经装配注入。
  */
 
-/** 抓取通道上限（R46——源自 page-image.ts:21，随通道走 F18；产品换内容类型时门不丢） */
+/** 抓取通道上限（R46——随通道走 F18；产品换内容类型时门不丢） */
 export const EXTRACT_MAX_BYTES = 7 * 1024 * 1024;
 
 /** 提取败因六值（跨层归属 F18：taint/decode=canvas 路、too_large=通道、
@@ -31,7 +31,7 @@ export const isExtractFailReason = (v: unknown): v is ExtractFailReason =>
   v === 'ineligible';
 
 /** 候选判定输入面：DOM 读取在调用方（runtime readTargetInfo），判定函数保持纯。
- *  形状源自 BadgeTargetInfo；随源类型可扩展（metadata 透传同款纪律） */
+ *  随源类型可扩展（metadata 透传同款纪律） */
 export interface TargetInfo {
   complete: boolean;
   naturalWidth: number;
@@ -51,7 +51,7 @@ export interface ExtractInput {
   node?: unknown;
 }
 
-/** 提取结果 ↔ 源 GrabResult */
+/** 提取结果 */
 export type ExtractResult =
   | { ok: true; blob: Blob; mime: 'image/png' | 'image/jpeg' }
   | { ok: false; reason: ExtractFailReason };
@@ -71,12 +71,12 @@ export interface ExtractDeps {
 
 /**
  * 抓取源接口（F26 契约）：
- * - isTarget：候选判定——扫描与点击复核同函数（F9，对应源 isBadgeTarget 两次调用）；
- * - extract：提取编码（对应源 grabImage 两路链，阈值参数化）；
+ * - isTarget：候选判定——扫描与点击复核同函数（F9）；
+ * - extract：提取编码（两路抓取链，阈值参数化）；
  * - decodeCdn：CDN 兜底解码——声明式 opt-in（F5）：在场则 SW 兜底以其转码面重走
- *   extract；缺席则该源不走 CDN 兜底（对应源 background:172 cdnGrab =
- *   grabImage({src}, {makeCanvas: makeOffscreenCanvas})）。
- * TExtract 输入/输出随源类型定义（image 源 = Blob 提取）。
+ *   extract；缺席则该源不走 CDN 兜底。
+ * TNode 输入/输出形状随源类型定义（image 源 = Blob 提取）。
+
  */
 export interface CaptureSource {
   isTarget(info: TargetInfo): boolean;

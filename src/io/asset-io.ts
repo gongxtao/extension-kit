@@ -1,5 +1,5 @@
 /**
- * asset-io —— 资产两条 IO 链路核心（源 R38 下载 / R39 预览 / R124a 预取缓存）
+ * asset-io —— 资产两条 IO 链路核心（R38 下载 / R39 预览 / R124a 预取缓存）
  *
  * 全 DI：fetch 两个端点、blob URL 工厂、download 都注入——jsdom 无
  * URL.createObjectURL、测试无 chrome，全走假件。
@@ -7,8 +7,8 @@
  * 泛化点：
  * - 产品 fetcher 注入化（§3 io 行）：端点函数留产品；TextResult 为本地结构类型
  *   （与 /api ApiResult<string> 结构等价——/io 底层零依赖，分层纪律 §4）
- * - filename 品牌资产注入（F23 判据：产品品牌串零缺省）：源 ready-svg-{id}.svg
- *   → deps.filename 回调（缺省通用 `${assetId}.svg`，无品牌）
+ * - filename 品牌资产注入（F23 判据：产品品牌串零缺省）：
+ *品牌串经 deps.filename 回调（缺省通用 `${assetId}.svg`，无品牌）
  */
 
 /** 与 /api ApiResult<string> 结构等价（/io 底层零依赖——分层纪律 §4，/api 结果可直接赋值） */

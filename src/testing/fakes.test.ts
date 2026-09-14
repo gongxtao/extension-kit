@@ -5,8 +5,7 @@ import type { CookieAccess } from '../session/session-store';
 
 /**
  * /testing 假件工厂测试——假件本身也是发布物（design.md §7 P3 最小集），
- * 各假件语义取自 ready-svg 测试手写假件（session-store/panel-prefs/background
- * 测试的 fakeArea/fakeCookies/fakeCtx）并固化为工厂。
+ * 语义与框架模块测试所用形态一致。
  */
 
 describe('createFakeStorageArea（local/session 语义 + onChanged + emit 观察缝）', () => {
@@ -50,19 +49,19 @@ describe('createFakeStorageArea（local/session 语义 + onChanged + emit 观察
 describe('createFakeCookies（domain 过滤 + 逐 cookie 提交时序 + onChanged）', () => {
   const setCookie = (cookies: CookieAccess, name: string, value: string): Promise<unknown> =>
     cookies.set({
-      url: 'https://readysvg.net', name, value, path: '/', secure: true,
+      url: 'https://myproduct.app', name, value, path: '/', secure: true,
       httpOnly: false, sameSite: 'lax', expirationDate: 0,
     });
 
   it('set/getAll 回环：域过滤（他域不可见）；remove 生效', async () => {
     const { cookies } = createFakeCookies();
     await setCookie(cookies, 'sb-x-auth-token', 'v1');
-    expect(await cookies.getAll({ domain: 'readysvg.net' })).toEqual([
+    expect(await cookies.getAll({ domain: 'myproduct.app' })).toEqual([
       { name: 'sb-x-auth-token', value: 'v1' },
     ]);
     expect(await cookies.getAll({ domain: 'other.example' })).toEqual([]);
-    await cookies.remove({ url: 'https://readysvg.net', name: 'sb-x-auth-token' });
-    expect(await cookies.getAll({ domain: 'readysvg.net' })).toEqual([]);
+    await cookies.remove({ url: 'https://myproduct.app', name: 'sb-x-auth-token' });
+    expect(await cookies.getAll({ domain: 'myproduct.app' })).toEqual([]);
   });
 
   it('set/remove 触发 onChanged（cookie name/domain 事件形）；可编程提交延迟（撕裂时序测试）', async () => {
@@ -76,7 +75,7 @@ describe('createFakeCookies（domain 过滤 + 逐 cookie 提交时序 + onChange
     expect(listener).toHaveBeenCalledTimes(1); // 延迟窗口内未提交
     await p;
     expect(listener).toHaveBeenCalledTimes(2);
-    expect(listener.mock.calls[1][0]).toEqual({ cookie: { name: 'slow', domain: 'readysvg.net' } });
+    expect(listener.mock.calls[1][0]).toEqual({ cookie: { name: 'slow', domain: 'myproduct.app' } });
   });
 });
 

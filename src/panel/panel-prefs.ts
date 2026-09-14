@@ -1,12 +1,12 @@
 /**
- * panel-prefs —— 页内面板偏好（源 feat-011，R85 模式 / R96 宽度；近原样 copy-out）
+ * panel-prefs —— 页内面板偏好（R85 模式 / R96 宽度）
  *
  * storage.local 两键（全局统一，非按页——设置件写入，content 宿主与面板页共享读）：
  * - ${ns}-panel-mode：'squeeze'（默认，向左挤压页面）| 'overlay'（浮层覆盖）
  * - ${ns}-panel-width：number px，缺省 460（R96 用户裁「400 偏小、参考 Monica」），
  *   拖拽范围夹取 [320, 720]
  *
- * 泛化点（§3 panel 行 + §5 键 ns 化）：源硬编码 rsvg-panel-mode/-width → keys 缝注入
+ * 泛化点（§3 panel 行 + §5 键 ns 化）：两存储键经 keys 缝注入
  * （调用方传 kit.key('panel-mode') / kit.key('panel-width')——键名集中管控）。
  * DI：StorageArea（/io 结构子集）+ onChanged 注册器注入。
  */

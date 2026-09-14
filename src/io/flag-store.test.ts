@@ -3,7 +3,7 @@ import { createFlagStore } from './flag-store';
 import type { StorageArea } from './storage';
 
 /**
- * flag-store 测试——copy-out 自 ready-svg onboarding.test.ts（R63 矩阵全保留）。
+ * flag-store 测试——R63 语义矩阵。
  * 泛化点（F15）：createOnboardingStore(area) → createFlagStore(area, key)——
  * 位置参按序追加；键经 kit.key('onboarding-seen') 由调用方派生注入。
  */

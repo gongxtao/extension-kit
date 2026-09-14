@@ -1,6 +1,6 @@
 /**
- * runtime/badge-overlay —— 页面徽标浮层（近原样 copy-out 自 ready-svg
- * badge-overlay.ts R43/R44/R58/R59/R60；三态机/悬停隐现/顶层重挂机制随码走）
+ * runtime/badge-overlay —— 页面徽标浮层（
+ * R43/R44/R58/R59/R60——三态机/悬停隐现/顶层重挂）
  *
  * R43 形态：宿主 div 挂 body（文档绝对坐标，随 scroll/resize 更新），徽标本体
  * 住 Shadow DOM——样式自包含（R43 Tailwind-only 豁免先例：注入宿主页面的元素
@@ -16,8 +16,8 @@
  * body 末位（同值后到元素压制防御，R59——z-index 2147483647）。
  *
  * 泛化点（F17/F23 + §5 清单）：
- * - data-rsvg-badge → badgeAttr 注入（kit.dataAttr('badge')）；
- * - CSS 动画名 rsvg-spin/shake → cssNames 注入（kit.cssName 派生）；
+ * - 宿主标记属性 → badgeAttr 注入（kit.dataAttr('badge')）；
+ * - Shadow 内 CSS 动画名 → cssNames 注入（kit.cssName 派生）；
  * - aria-label / 回退双文案 / 品牌色 / 图形 path → 产品注入零缺省（F23 对账单：
  *   badge-overlay.ts:31-32 文案 + :83-90 LOGO/LOCK path + 品牌黄）；
  * - source 站点值域归产品（F17）：source?: unknown 透传 metadata + cornerFor 输入

@@ -1,8 +1,8 @@
 /**
- * flag-store —— 布尔标记存储（源 onboarding.ts R63 首启标记泛化，review3 修订 F15）
+ * flag-store —— 布尔标记存储（R63 首启标记语义，review3 修订 F15）
  *
- * `createFlagStore(area, key)`：位置参按序追加（F15——源 createOnboardingStore(area)
- * 单主体 + 新增 key 缝）；键经 `kit.key('onboarding-seen')` 由调用方派生注入——
+ * `createFlagStore(area, key)`：位置参按序追加（F15——单主体构造器
+ * 新增 key 缝按序追加）；键经 `kit.key('onboarding-seen')` 由调用方派生注入——
  * 框架不持 ns，键名集中管控（§5）。
  *
  * DI：StorageArea 注入（/io storage 结构子集），不 import browser 单例。
@@ -31,7 +31,7 @@ export function createFlagStore(area: StorageArea, key: string): FlagStore {
       try {
         await area.set({ [key]: true });
       } catch {
-        /* 静默：标记失败无害（源 onboarding 明日再见一次口径） */
+        /* 静默：标记失败无害（标记失败无害口径） */
       }
     },
   };

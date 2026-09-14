@@ -1,5 +1,5 @@
 /**
- * runtime/toast —— 页面角回退 toast（源 §6.1 右键链失败反馈；Shadow DOM 隔离
+ * runtime/toast —— 页面角回退 toast（右键链失败反馈；Shadow DOM 隔离
  * 同 R43 豁免口径，F27 页内注入纪律）。data-${ns}-toast 属性注入（§5 清单）。
  */
 

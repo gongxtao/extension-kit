@@ -10,7 +10,7 @@ import type { PanelHostDeps } from './panel-host';
 import type { PanelMode } from './panel-prefs';
 
 /**
- * panel-host 测试——copy-out 自 ready-svg panel-host.test.ts（R87–R98 矩阵全保留），
+ * panel-host 测试——R87–R98 矩阵，
  * ns='testkit' 参数化（§5 清单：DOM id / close 消息 kind / data 属性）+
  * F23 新增断言（aria-label 零缺省、边线样式可覆盖）。
  */
@@ -150,10 +150,10 @@ describe('panel-host（R87–R90：页内 iframe 面板宿主）', () => {
     expect(host.isOpen()).toBe(false);
   });
 
-  it('杂讯不误触：他 kind（含源旧 rsvg-* 字面量）/ 非对象 data 不影响开面板态', () => {
+  it('杂讯不误触：他 kind（含旧 kind 字面量）/ 非对象 data 不影响开面板态', () => {
     const host = createPanelHost(makeDeps(fakePrefs().prefs));
     host.show();
-    window.dispatchEvent(new MessageEvent('message', { data: { kind: 'rsvg-close-panel' } }));
+    window.dispatchEvent(new MessageEvent('message', { data: { kind: 'legacy-close-panel' } }));
     window.dispatchEvent(new MessageEvent('message', { data: { kind: 'testkit-other' } }));
     window.dispatchEvent(new MessageEvent('message', { data: 'plain string' }));
     expect(host.isOpen()).toBe(true);

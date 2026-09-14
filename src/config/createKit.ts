@@ -1,10 +1,9 @@
 /**
  * createKit —— ns 一根线派生所有全局名字（docs/design.md §5，F20 契约）
  *
- * 本抽象是框架唯一无 ready-svg 直接对应物的**登记例外**（F20）：源为 config.ts
- * 单例装配 + 各文件散落的 `rsvg-` 前缀字面量，无集中派生函数。约束三则：
- * 纯字符串派生、无状态无新运行时概念；ns='rsvg' 时输出与源字面量逐字节等价
- * （§5 全量清单即测试规格）；新派生类别须先回 design.md §5 扩契约，不得散落。
+ * 本抽象是框架唯一无既有实现对应物的**登记例外**（F20）。约束三则：
+ * 纯字符串派生、无状态无新运行时概念；对任意 ns 输出确定性派生
+ * （createKit.test 全表即测试规格）；新派生类别须先回 design.md §5 扩契约，不得散落。
  */
 
 export interface KitConfig {
@@ -13,15 +12,15 @@ export interface KitConfig {
 }
 
 export interface Kit {
-  /** 存储键 `${ns}-${suffix}`（源形如 rsvg-me-cache） */
+  /** 存储键 `${ns}-${suffix}`（形如 ${ns}-me-cache） */
   key(suffix: string): string;
-  /** 消息 kind `${ns}-${suffix}`（源形如 rsvg-toggle-panel） */
+  /** 消息 kind `${ns}-${suffix}`（形如 ${ns}-toggle-panel） */
   kind(suffix: string): string;
-  /** DOM id `${ns}-${suffix}`（源形如 rsvg-panel-host） */
+  /** DOM id `${ns}-${suffix}`（形如 ${ns}-panel-host） */
   domId(suffix: string): string;
-  /** DOM data 属性 `data-${ns}-${suffix}`（源形如 data-rsvg-badge；徽标宿主无 id，F12） */
+  /** DOM data 属性 `data-${ns}-${suffix}`（形如 data-<ns>-badge；徽标宿主无 id，F12） */
   dataAttr(suffix: string): string;
-  /** Shadow 内 CSS/动画名 `${ns}-${suffix}`（源形如 rsvg-spin） */
+  /** Shadow 内 CSS/动画名 `${ns}-${suffix}`（形如 ${ns}-spin） */
   cssName(suffix: string): string;
   /** 菜单 id `${ns}-${suffix}`（装配层缺省 suffix='convert'，F13） */
   menuId(suffix: string): string;

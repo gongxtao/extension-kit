@@ -1,5 +1,5 @@
 /**
- * Supabase auth REST 客户端（近原样 copy-out 自 ready-svg auth-rest.ts）
+ * Supabase auth REST 客户端
  *
  * 插件不引 supabase-js SDK，直接调 Supabase auth REST：
  * - refreshSession：POST {supabaseUrl}/auth/v1/token?grant_type=refresh_token，

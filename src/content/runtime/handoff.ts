@@ -1,9 +1,9 @@
 /**
- * runtime/handoff —— storage.session 交接通道（近原样 copy-out 自 ready-svg
- * handoff.ts R46/R47；守卫面已由 /messaging kitMessages 承接，本模块只留
+ * runtime/handoff —— storage.session 交接通道（
+ * R46/R47；守卫面已由 /messaging kitMessages 承接，本模块只留
  * store/编解码/TTL）
  *
- * 单通道裁定（源 plan 事实 1/2）：
+ * 单通道裁定：
  * - chrome.storage.session 键 ${ns}-image-handoff（键 ns 化——key 注入，
  *   kit.key('image-handoff') 派生口径）：浏览器会话级、默认仅扩展上下文可访
  *   ——background 写 / 面板读，content script 不接触，正合隐私分工。
@@ -20,7 +20,7 @@
 import type { StorageArea } from '../../io/storage';
 import { EXTRACT_MAX_BYTES } from '../capture/types';
 
-/** 交接记录（源 ImageHandoff；source → metadata） */
+/** 交接记录（source → metadata 透传） */
 export interface HandoffRecord {
   kind: 'image';
   base64: string;

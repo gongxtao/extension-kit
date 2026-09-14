@@ -1,7 +1,7 @@
 /**
  * /testing Playwright 助手（design.md §7 P3 最小集——扩展 E2E 的公共形态提炼）
  *
- * 形态源自 ready-svg e2e/panel.spec.ts（launchPersistentContext + unpacked 加载 +
+ * 形态：launchPersistentContext + unpacked 加载 +
  * panel.html 直开 + cookie 注入 + route mock）。类型面为结构性最小子集——运行时
  * 零依赖（消费方自带 @playwright/test）。
  *

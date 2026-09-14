@@ -5,9 +5,9 @@ import type { ApiDeps } from './api-client';
 import type { StoredSession } from '../session/session-codec';
 
 /**
- * apiFetch 传输核测试——copy-out 自 ready-svg api-client.test.ts 的 apiFetch 矩阵
- * （原测试里经 fetchMe/fetchOptimize 等端点封装的用例，此处直接打 apiFetch——
- * 端点函数归产品（F3），传输语义矩阵逐条保留）。
+ * apiFetch 传输核测试——传输语义矩阵
+ * （直接打 apiFetch——
+ * 端点函数归产品（F3）。
  */
 
 /** 会话工厂：字段含义同 session-store（access_token 是唯一被本层消费的字段） */
@@ -39,7 +39,7 @@ const setup = (over: Partial<ApiDeps> = {}) => {
     fetchMock,
     d: {
       getValidSession: vi.fn(async () => session()),
-      baseUrl: 'https://readysvg.net',
+      baseUrl: 'https://myproduct.app',
       fetchFn: fetchMock,
       ...over,
     } satisfies ApiDeps,
@@ -68,7 +68,7 @@ describe('apiFetch（api.md §2.1：插件 Bearer / 无 cookie 语义；状态�
 
     expect(result).toEqual({ ok: true, data: ME_BODY });
     const { url, init } = soleCall(fetchMock);
-    expect(url).toBe('https://readysvg.net/api/me');
+    expect(url).toBe('https://myproduct.app/api/me');
     expect(init.method).toBe('GET');
     const headers = new Headers(init.headers);
     expect(headers.get('authorization')).toBe('Bearer at-client');
@@ -125,7 +125,7 @@ describe('apiFetch POST JSON 通道', () => {
       .mockResolvedValue(response ?? json(200, OPT_BODY));
     const d: ApiDeps = {
       getValidSession: vi.fn(async () => session()),
-      baseUrl: 'https://readysvg.net',
+      baseUrl: 'https://myproduct.app',
       fetchFn: fetchMock,
     };
     return { fetchMock, d };
@@ -141,7 +141,7 @@ describe('apiFetch POST JSON 通道', () => {
 
     expect(result).toEqual({ ok: true, data: OPT_BODY });
     const { url, init } = soleCall(fetchMock);
-    expect(url).toBe('https://readysvg.net/api/prompts/optimize');
+    expect(url).toBe('https://myproduct.app/api/prompts/optimize');
     expect(init.method).toBe('POST');
     expect(init.body).toBe(JSON.stringify({ profile: 'cut', prompt: 'a simple cat logo' }));
     const headers = new Headers(init.headers);
@@ -173,7 +173,7 @@ describe('apiFetch multipart + raw 双通道', () => {
       .mockResolvedValue(response ?? json(200, { ok: true }));
     const d: ApiDeps = {
       getValidSession: vi.fn(async () => session()),
-      baseUrl: 'https://readysvg.net',
+      baseUrl: 'https://myproduct.app',
       fetchFn: fetchMock,
     };
     return { fetchMock, d };
@@ -189,7 +189,7 @@ describe('apiFetch multipart + raw 双通道', () => {
 
     expect(result.ok).toBe(true);
     const { url, init } = soleCall(fetchMock);
-    expect(url).toBe('https://readysvg.net/api/generations');
+    expect(url).toBe('https://myproduct.app/api/generations');
     expect(init.method).toBe('POST');
     expect(init.body).toBe(form); // 引用直传，不 JSON.stringify
     const headers = new Headers(init.headers);
@@ -205,7 +205,7 @@ describe('apiFetch multipart + raw 双通道', () => {
 
     expect(result).toEqual({ ok: true, data: SVG_TEXT });
     const { url, init } = soleCall(fetchMock);
-    expect(url).toBe('https://readysvg.net/api/assets/x/preview');
+    expect(url).toBe('https://myproduct.app/api/assets/x/preview');
     expect(init.method).toBe('GET');
   });
 

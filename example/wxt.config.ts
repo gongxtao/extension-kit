@@ -1,6 +1,6 @@
 import { defineConfig } from 'wxt';
 
-// 装配形态照 ready-svg（extension/wxt.config.ts）最小化裁剪：P0 骨架不需要
+// 装配形态最小化裁剪：P0 骨架不需要
 // react 模块 / auto-icons / downloads（asset-io 随 feat-004）/ cookies（session 随 feat-005）。
 export default defineConfig({
   srcDir: 'src',

@@ -1,7 +1,7 @@
 /**
- * apiFetch —— Web API 传输骨架（近原样 copy-out 自 ready-svg api-client.ts 传输核）
+ * apiFetch —— Web API 传输骨架
  *
- * api.md §2.1：插件请求一律 `Authorization: Bearer <Supabase access token>`、
+ * 接口约定：插件请求一律 `Authorization: Bearer <Supabase access token>`、
  * 不携带 refresh token、无 cookie 语义（credentials omit——Web 的 cookie 鉴权
  * 与插件无关）；成功体为 `{ok:true, <payload>}` 信封，错误体为
  * `{ok:false, error:{code, message, fieldErrors?}}`。
@@ -24,14 +24,14 @@ import type { StoredSession } from '../session/session-codec';
 
 export interface ApiDeps {
   getValidSession(): Promise<StoredSession | null>;
-  /** Web 站点源（api.md §2.1 接口基址），由接线方注入 */
+  /** Web 站点源（接口基址），由接线方注入 */
   baseUrl: string;
   fetchFn?: typeof fetch;
 }
 
 export type ApiResult<T> = { ok: true; data: T } | { ok: false; status: number; code: string };
 
-/** api.md §2.1 错误信封取 code；形状不符（含非 JSON 体）→ null */
+/** 错误信封取 code；形状不符（含非 JSON 体）→ null */
 const errorCodeOf = (body: unknown): string | null => {
   if (typeof body !== 'object' || body === null) return null;
   const error = (body as { error?: unknown }).error;
@@ -40,8 +40,8 @@ const errorCodeOf = (body: unknown): string | null => {
   return typeof code === 'string' ? code : null;
 };
 
-/** apiFetch 请求可选项：method 缺省 GET；给 body 即 POST JSON（feat-004 Task 1 扩展）；
- *  body 为 FormData 时 multipart 直传（feat-005 Task 1：generations 上传，浏览器补 boundary）；
+/** apiFetch 请求可选项：method 缺省 GET；给 body 即 POST JSON；
+ *  body 为 FormData 时 multipart 直传（浏览器补 boundary）；
  *  raw:'text' 时成功响应按纯文本返回（preview/exports 直出 SVG，非 JSON 信封端点）。 */
 export interface ApiFetchOpts {
   method?: 'GET' | 'POST';
@@ -71,7 +71,7 @@ export async function apiFetch<T>(
       headers,
       // FormData 引用直传（multipart boundary 由浏览器生成，手工 content-type 反而破坏它）
       body: form ?? (opts.body === undefined ? undefined : JSON.stringify(opts.body)),
-      // 无 cookie 语义：Web 的登录 cookie 与插件请求完全隔离（api.md §2.1）
+      // 无 cookie 语义：Web 的登录 cookie 与插件请求完全隔离
       credentials: 'omit',
     });
   } catch {
@@ -96,7 +96,7 @@ export async function apiFetch<T>(
   }
 
   if (opts.raw === 'text') {
-    // raw 端点成功 = HTTP 200 即文本（api.md：响应体直接是 SVG），无信封校验
+    // raw 端点成功 = HTTP 200 即文本（响应体直出），无信封校验
     if (response.ok && text !== null) return { ok: true, data: text as T };
   } else {
     const envelopeOk =

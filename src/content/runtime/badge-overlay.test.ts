@@ -10,15 +10,15 @@ import { defaultCornerFor } from '../capture/image';
 import type { BadgeOverlayDeps, GrabOutcome } from './badge-overlay';
 
 /**
- * badge-overlay 测试——copy-out 自 ready-svg badge-overlay.test.ts（R43/R44/R58/R59/R60
- * 矩阵全保留）。泛化适配（F17/F23 + §5 清单）：品牌/文案/aria 注入零缺省、
+ * badge-overlay 测试——（R43/R44/R58/R59/R60
+ * 矩阵）。泛化适配（F17/F23 + §5 清单）：品牌/文案/aria 注入零缺省、
  * data 属性与 CSS 动画名 ns 化注入（testkit-*）、source 产品域透传 metadata、
  * 角位策略 cornerFor 注入（缺省右下角）。
  */
 
 const BADGE_ATTR = 'data-testkit-badge';
 const TEXTS = {
-  ariaLabel: 'Convert with Ready SVG',
+  ariaLabel: 'Convert with Extension Kit',
   fallbackText: 'Paste or download, then upload',
   tooLargeText: 'Image too large — download it, then upload',
 };

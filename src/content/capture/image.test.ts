@@ -10,7 +10,7 @@ import {
 import { EXTRACT_MAX_BYTES } from './types';
 
 /**
- * 图片抓取源测试——copy-out 自 ready-svg page-image.test.ts（R42/R45 矩阵全保留）。
+ * 图片抓取源测试——R42/R45 矩阵。
  * 泛化适配（F17/F18/F26）：sourceOf 站点映射测试随 F17 删除（值域归产品——框架
  * 零站点知识）；HANDOFF_MAX_BYTES 正名 EXTRACT_MAX_BYTES 随通道走（F18）；
  * isBadgeTarget 正名 isImageTarget、image → node（F26 接口面）。

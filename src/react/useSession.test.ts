@@ -10,7 +10,7 @@ import type { ApiDeps, ApiResult } from '../api/api-client';
 import { apiFetch } from '../api/api-client';
 
 /**
- * useSession 测试——copy-out 自 ready-svg useSession.test.ts（433 行矩阵全保留），
+ * useSession 测试（历史 433 行矩阵泛化适配），
  * 泛型化适配（F3/F19）：fetchMe → fetchAccount 注入（测试用真 apiFetch 组装——
  * 产品接线形态，保留无会话短路语义）、config.webOrigin 缺省删除（baseUrl 必填）、
  * meCache 条目 me → value、账户形状为产品自有（测试用 Me）。
@@ -29,7 +29,7 @@ const session = (over: Partial<StoredSession> = {}): StoredSession => ({
 });
 
 const ME: Me = { email: 'maker@example.com', credits: 7 };
-const BASE = 'https://readysvg.net';
+const BASE = 'https://myproduct.app';
 
 const json = (status: number, body: unknown): Response =>
   new Response(JSON.stringify(body), {

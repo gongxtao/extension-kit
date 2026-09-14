@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { kitMessages } from './kitMessages';
 
-// 守卫矩阵源：ready-svg handoff.test.ts 的 is* 过/拒矩阵（copy-out 泛化——
+// 守卫矩阵（历史 is* 过/拒矩阵泛化——
 // source 站点值域 → metadata 透传，框架只查存在性、值域归产品注入守卫，F17/F24）
 describe('kitMessages —— 框架内置 7 kind（design.md §5；ack 是返回类型不占 kind，F12）', () => {
   it('kind ns 化：ns=exkit 七件齐全且形状为 ${ns}-${suffix}', () => {
@@ -16,15 +16,15 @@ describe('kitMessages —— 框架内置 7 kind（design.md §5；ack 是返回
     expect(Object.keys(m)).toHaveLength(7);
   });
 
-  it("ns='rsvg' 时 kind 与源字面量逐字节等价（§5 清单口径）", () => {
-    const m = kitMessages('rsvg');
-    expect(m.imageHandoff.kind).toBe('rsvg-image-handoff');
-    expect(m.grab.kind).toBe('rsvg-grab');
-    expect(m.cdnGrab.kind).toBe('rsvg-cdn-grab');
-    expect(m.handoffConsumed.kind).toBe('rsvg-handoff-consumed');
-    expect(m.togglePanel.kind).toBe('rsvg-toggle-panel');
-    expect(m.showPanel.kind).toBe('rsvg-show-panel');
-    expect(m.closePanel.kind).toBe('rsvg-close-panel');
+  it("ns='alpha' 时 kind kind 派生口径（§5 清单口径）", () => {
+    const m = kitMessages('alpha');
+    expect(m.imageHandoff.kind).toBe('alpha-image-handoff');
+    expect(m.grab.kind).toBe('alpha-grab');
+    expect(m.cdnGrab.kind).toBe('alpha-cdn-grab');
+    expect(m.handoffConsumed.kind).toBe('alpha-handoff-consumed');
+    expect(m.togglePanel.kind).toBe('alpha-toggle-panel');
+    expect(m.showPanel.kind).toBe('alpha-show-panel');
+    expect(m.closePanel.kind).toBe('alpha-close-panel');
   });
 
   it('imageHandoff 守卫：合法全过/无 metadata 合法；畸形全拒（源 isHandoffMessage 矩阵泛化）', () => {

@@ -2,38 +2,38 @@ import { describe, expect, it } from 'vitest';
 import { createKit } from './createKit';
 
 // 断言规格 = docs/design.md §5「ns 化名字全量清单」（F11/F16）——
-// ns='rsvg' 时与 ready-svg@95d0842 源字面量逐字节等价（F20 例外登记的验收基准）
+// ns='alpha' 时派生与 §5 全表逐项一致（F20 例外登记的验收基准）
 describe('createKit —— ns 一根线穿过所有全局名字（design.md §5）', () => {
-  it("ns='rsvg'：存储键派生与源字面量逐字节等价（§5 清单·5 键）", () => {
-    const kit = createKit({ namespace: 'rsvg' });
-    expect(kit.key('me-cache')).toBe('rsvg-me-cache');
-    expect(kit.key('panel-mode')).toBe('rsvg-panel-mode');
-    expect(kit.key('panel-width')).toBe('rsvg-panel-width');
-    expect(kit.key('image-handoff')).toBe('rsvg-image-handoff');
-    expect(kit.key('onboarding-seen')).toBe('rsvg-onboarding-seen');
+  it("ns='alpha'：存储键派生与源字面量逐字节等价（§5 清单·5 键）", () => {
+    const kit = createKit({ namespace: 'alpha' });
+    expect(kit.key('me-cache')).toBe('alpha-me-cache');
+    expect(kit.key('panel-mode')).toBe('alpha-panel-mode');
+    expect(kit.key('panel-width')).toBe('alpha-panel-width');
+    expect(kit.key('image-handoff')).toBe('alpha-image-handoff');
+    expect(kit.key('onboarding-seen')).toBe('alpha-onboarding-seen');
   });
 
-  it("ns='rsvg'：消息 kind 派生与源字面量逐字节等价（§5 清单·7 kind）", () => {
-    const kit = createKit({ namespace: 'rsvg' });
-    expect(kit.kind('image-handoff')).toBe('rsvg-image-handoff');
-    expect(kit.kind('grab')).toBe('rsvg-grab');
-    expect(kit.kind('cdn-grab')).toBe('rsvg-cdn-grab');
-    expect(kit.kind('toggle-panel')).toBe('rsvg-toggle-panel');
-    expect(kit.kind('show-panel')).toBe('rsvg-show-panel');
-    expect(kit.kind('handoff-consumed')).toBe('rsvg-handoff-consumed');
-    expect(kit.kind('close-panel')).toBe('rsvg-close-panel');
+  it("ns='alpha'：消息 kind 派生与源字面量逐字节等价（§5 清单·7 kind）", () => {
+    const kit = createKit({ namespace: 'alpha' });
+    expect(kit.kind('image-handoff')).toBe('alpha-image-handoff');
+    expect(kit.kind('grab')).toBe('alpha-grab');
+    expect(kit.kind('cdn-grab')).toBe('alpha-cdn-grab');
+    expect(kit.kind('toggle-panel')).toBe('alpha-toggle-panel');
+    expect(kit.kind('show-panel')).toBe('alpha-show-panel');
+    expect(kit.kind('handoff-consumed')).toBe('alpha-handoff-consumed');
+    expect(kit.kind('close-panel')).toBe('alpha-close-panel');
   });
 
-  it("ns='rsvg'：DOM id / data 属性 / Shadow CSS 名 / 菜单 id 逐字节等价（§5 清单）", () => {
-    const kit = createKit({ namespace: 'rsvg' });
-    expect(kit.domId('panel-host')).toBe('rsvg-panel-host');
-    expect(kit.dataAttr('badge')).toBe('data-rsvg-badge');
-    expect(kit.dataAttr('toast')).toBe('data-rsvg-toast');
-    expect(kit.dataAttr('resize')).toBe('data-rsvg-resize');
-    expect(kit.dataAttr('copy')).toBe('data-rsvg-copy');
-    expect(kit.cssName('spin')).toBe('rsvg-spin');
-    expect(kit.cssName('shake')).toBe('rsvg-shake');
-    expect(kit.menuId('convert')).toBe('rsvg-convert');
+  it("ns='alpha'：DOM id / data 属性 / Shadow CSS 名 / 菜单 id 逐字节等价（§5 清单）", () => {
+    const kit = createKit({ namespace: 'alpha' });
+    expect(kit.domId('panel-host')).toBe('alpha-panel-host');
+    expect(kit.dataAttr('badge')).toBe('data-alpha-badge');
+    expect(kit.dataAttr('toast')).toBe('data-alpha-toast');
+    expect(kit.dataAttr('resize')).toBe('data-alpha-resize');
+    expect(kit.dataAttr('copy')).toBe('data-alpha-copy');
+    expect(kit.cssName('spin')).toBe('alpha-spin');
+    expect(kit.cssName('shake')).toBe('alpha-shake');
+    expect(kit.menuId('convert')).toBe('alpha-convert');
   });
 
   it("ns='testkit'：参数化派生 ${ns}-${suffix} / data-${ns}-${suffix}", () => {
@@ -52,7 +52,7 @@ describe('createKit —— ns 一根线穿过所有全局名字（design.md §5�
     expect(() => createKit({ namespace: 'a-b' })).toThrow();
     expect(() => createKit({ namespace: 'a b' })).toThrow();
     expect(() => createKit({ namespace: 'a_b' })).toThrow();
-    expect(() => createKit({ namespace: 'rsvg1' })).not.toThrow();
+    expect(() => createKit({ namespace: 'alpha1' })).not.toThrow();
   });
 
   it('纯字符串派生：无状态、同参同果（F20 例外登记约束）', () => {

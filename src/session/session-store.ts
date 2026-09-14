@@ -1,7 +1,7 @@
 /**
- * Session store（近原样 copy-out 自 ready-svg session-store.ts）——插件侧会话编排核心
+ * Session store ——插件侧会话编排核心
  *
- * 计划裁定 R8：会话层住 sidepanel、DI 可上移——cookies / config / fetch / now
+ * 裁定 R8：会话层住 sidepanel、DI 可上移——cookies / config / fetch / now
  * 全部注入，不 import config 单例，不触 window/document（SSR-safe，可搬 background）。
  *
  * - getSession：读本域 `sb-<ref>-auth-token`（及分块 .0/.1/…）→ codec 解码；缺失/非法 → null。

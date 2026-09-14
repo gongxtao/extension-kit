@@ -2,7 +2,7 @@
  * defineMessages —— 产品自定义消息工厂（design.md §5）
  *
  * kitMessages 之外的业务消息走这里：ns 一根线派生 kind（缺省规则 = 消息名
- * camelCase → kebab-case，镜像源命名 ImageHandoffMessage ↔ rsvg-image-handoff；
+ * camelCase → kebab-case，如 exportRequested → ${ns}-export-requested；
  * def.kind 显式覆盖），payload 守卫由产品注入。守卫纪律继承：畸形消息静默拒。
  */
 

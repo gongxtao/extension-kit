@@ -3,7 +3,7 @@ import { createMeCache } from './me-cache';
 import type { StorageArea } from '../io/storage';
 
 /**
- * me-cache 测试——copy-out 自 ready-svg me-cache.test.ts（R101 矩阵全保留），
+ * me-cache 测试——R101 矩阵，
  * 按 F3/F7/F15 泛型化适配：MeInfo → 产品形状（测试用最小身份契约）、me → value、
  * isMeInfo → validate 守卫注入、键经参数注入（kit.key('me-cache') 派生口径）。
  */
@@ -133,7 +133,7 @@ describe('createMeCache<T>(area, validate, key, now?)（F15 位置参 + §5 键�
     await area.set({ [KEY]: { value: { weird: 'shape' }, userId: 'u1', savedAt: 1 } });
     // isMe 拒收 weird shape
     expect(await createMeCache<Me>(area, isMe, KEY).get()).toBeNull();
-    // 换一套产品守卫则采用（ready-svg 消费侧传 isMeInfo 即适配的语义）
+    // 换一套产品守卫则采用（守卫注入缝的语义）
     interface Weird { weird: string }
     const isWeird = (v: unknown): v is Weird =>
       typeof v === 'object' && v !== null && typeof (v as { weird?: unknown }).weird === 'string';

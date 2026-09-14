@@ -14,7 +14,7 @@ const sessionBody = {
   refresh_token: 'new-refresh-token',
   expires_at: 1780000000,
   token_type: 'bearer',
-  user: { email: 'user@readysvg.net' },
+  user: { email: 'user@myproduct.app' },
 };
 
 /** 取 mock fetch 的唯一一次调用参数（headers 经 Headers 归一，兼容两种实现写法） */

@@ -1,7 +1,7 @@
 /**
- * capture/image —— 图片抓取源（源 page-image.ts R42/R45/R48 泛化，F26 首发实现）
+ * capture/image —— 图片抓取源（R42/R45 语义，F26 首发实现）
  *
- * 职责（源语义随码走）：
+ * 职责：
  * - isTarget（R42）：哪些 <img> 挂徽标——尺寸阈值（natural ≥300、渲染 ≥160×160）
  *   + 排除占位（data:）、懒加载未落地（!complete）、装饰（aria-hidden / 宽高属性 ≤32）。
  *   阈值可调（imageCapture({...阈值})，F26 注入点）。

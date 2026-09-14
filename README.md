@@ -2,10 +2,11 @@
 
 浏览器插件通用能力框架（headless 核心 + `/react` 逻辑 hooks）——会话同步 / 页内面板宿主 / 页面集成抓取 / 消息协议 / 测试基建。新产品起步 = WXT 入口装配 + 业务视图，基础管线零重写。
 
-- **设计真源**：[docs/design.md](./docs/design.md)（v2，五轮 review 收口 F1–F28）
-- **装配活样例**：[example/](./example/)（装配形态参照）· [demo/](./demo/)（端到端消费验证：徽标抓图 → 面板渲染 → 复制/偏好，含真机冒烟）
-- **抽离源**：ready-svg 插件（基线 commit `95d0842`，冻结仓，copy-out 只抄不搬）
-- **仅 Chromium MV3**（Chrome ≥123 随源钉）；核心运行时零依赖；`/react` 的 react 为可选 peerDependency
+- **状态**：v0.1.0 已发布（GitHub Packages 私有）；12/12 特性收口；228+ 单测 + 真机冒烟全绿
+- **设计真源**：[docs/design.md](./docs/design.md)（模块契约 / 配置归属 / 命名空间协议 / 裁定记录）
+- **接入教程**：[docs/onboarding.md](./docs/onboarding.md)——从零到「徽标抓内容 → 面板展示」的分步指南（代码块经编译门持续校验）
+- **可运行参照**：[example/](./example/)（最小装配形态）· [demo/](./demo/)（端到端消费验证：抓图 → 面板渲染 → 复制/偏好，真机六断言冒烟）
+- **仅 Chromium MV3**（Chrome ≥123）；核心运行时零依赖；`/react` 的 react 为可选 peerDependency
 
 ## 安装
 
@@ -26,18 +27,32 @@ npm i @gongxtao/extension-kit
 > 三入口 → panel 页 → 首个单测 → 真机 checklist → 常见坑；代码块经 demo 编译门持续校验）。
 > 下列骨架可直接复制，`<ns>` 换成产品自己的单段 `[a-z0-9]+` 命名空间。
 
-### 1. manifest 必备声明（缺一项 = 静默故障，F21）
+### 1. manifest：按你要的能力勾选（wxt.config.ts）
+
+只用 /io 的 flag-store？那 permissions 只要 `storage`。按能力累加（F21 映射表——
+**漏一项就是静默故障**，尤其 WAR）：
+
+| 你要的能力 | manifest 必备 |
+|---|---|
+| /io flag-store / panel-prefs | `permissions: ['storage']` |
+| /content（徽标/抓图/面板宿主） | `host_permissions: ['<all_urls>']`（可收窄） |
+| background 装配面（右键菜单） | `permissions: ['contextMenus']` |
+| /panel 页内 iframe 面板 | `web_accessible_resources`：`panel.html` + `chunks/*` + `assets/*` + `icons/*`（+ matches）——**漏一项 iframe 白屏且无报错** |
+| /session 会话 | `permissions: ['cookies']`（+ storage） |
+| /io asset-io 下载 | `permissions: ['downloads']` |
 
 ```ts
-// wxt.config.ts（节选；完整形态见 example/wxt.config.ts）
+// wxt.config.ts —— 抓图+面板的最小形态
+import { defineConfig } from 'wxt';
+
 export default defineConfig({
   srcDir: 'src',
   manifest: () => ({
-    name: 'Your Product',
-    permissions: ['storage', 'contextMenus', 'cookies' /* session */, 'downloads' /* asset-io */],
-    host_permissions: ['<all_urls>'],          // /content + CDN 兜底（可收窄）
+    name: 'My Product',
+    action: {},
+    permissions: ['storage', 'contextMenus'],
+    host_permissions: ['<all_urls>'],
     minimum_chrome_version: '123',
-    // /panel：页内 iframe 面板宿主需页面可载扩展页——漏一项 iframe 白屏（R91）
     web_accessible_resources: [
       { resources: ['panel.html', 'chunks/*', 'assets/*', 'icons/*'], matches: ['<all_urls>'] },
     ],
@@ -62,7 +77,7 @@ import { browser } from 'wxt/browser';
 import {
   kitMessages, createPanelPrefs, createPanelHost, startContentRuntime,
   imageCapture, makeDomCanvas,
-} from '@gongxtao/extension-kit';        // imageCapture/makeDomCanvas/startContentRuntime 亦可用 /content 子路径
+} from '@gongxtao/extension-kit';
 import { kit } from '../lib/kit';
 
 export default defineContentScript({
@@ -107,14 +122,10 @@ export default defineContentScript({
 });
 ```
 
-> 面包屑：`startContentRuntime` 的 deps（captureSource / messages / badgeDeps / panelHost）
-> 与 `setupPageIntegration` 的 opts（menuId 缺省 `kit.menuId('convert')`）在
-> docs/design.md §4 有逐条契约（F13/F17/F23/F26），example/ 是可运行参照。
-
 ### 4. background 入口（菜单 / toolbar / handoff 收口 / CDN 兜底）
 
 ```ts
-// src/entrypoints/background/index.ts —— setupPageIntegration(ctx, opts)：框架装配面整体进框架
+// src/entrypoints/background/index.ts —— setupPageIntegration(ctx, opts)：装配面整体在框架内
 import { browser } from 'wxt/browser';
 import { kitMessages } from '@gongxtao/extension-kit';
 import {
@@ -169,11 +180,10 @@ import { createFakeStorageArea, createFakeCookies, createFakeContentRuntime } fr
 1. 改框架 → bump semver（手工 + CHANGELOG.md，不上 changesets）→ init.sh 全绿
 2. 打 `v*` 标签推送 → Actions 自动发布 GitHub Packages（`.github/workflows/release.yml`）
 3. 产品侧升版 → 产品 init.sh + E2E 全绿才算收口（无消费者迁移在途的独立演进期除外）
-4. ready-svg 侧共享代码 bug：就地小修 + 按 design.md §9 溯源映射表对照移植（可选项）
 
 ## 会话启动路径（代理/AI 协作）
 
 1. `pwd && git status --short --branch`（新 shell 先 `nvm use`）
-2. 读 `CLAUDE.md` 启动头（含落地质则铁律）→ `docs/design.md`（真源）→ `session-handoff.md` → `feature_list.json` / `progress.md`
+2. 读 `CLAUDE.md` 启动头 → `docs/design.md`（真源）→ `session-handoff.md` → `feature_list.json` / `progress.md`
 3. Run `./init.sh`（lint → unit → build，fail-fast）
 4. `git log --oneline -5` 对齐最近变更

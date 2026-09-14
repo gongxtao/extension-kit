@@ -10,7 +10,7 @@ import {
 import type { StorageArea } from '../io/storage';
 
 /**
- * panel-prefs 测试——copy-out 自 ready-svg panel-prefs.test.ts（R85/R96 矩阵全保留），
+ * panel-prefs 测试——R85/R96 矩阵，
  * keys 缝注入参数化（§5 键 ns 化：kit.key('panel-mode') / kit.key('panel-width')）。
  */
 

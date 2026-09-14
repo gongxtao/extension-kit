@@ -8,8 +8,8 @@ import { imageCapture } from '../capture/image';
 import { kitMessages } from '../../messaging/kitMessages';
 
 /**
- * background 装配面测试——copy-out 自 ready-svg entrypoints/background/index.test.ts
- * （F13 整体参数化断言随码参数化转红再泛化绿——菜单 id/title/contexts 注入；
+ * background 装配面测试——
+ * （F13 整体参数化——菜单 id/title/contexts 注入；
  * R46/R49/R53/R97 + R90 打开链收敛矩阵全保留）。泛化适配（F17/F24/F26）：
  * kind 走 kitMessages('testkit')；source → metadata 透传；CDN 兜底由源声明
  * decodeCdn（makeCanvas 注入）才接线，抓取经 captureSource.extract。
@@ -17,7 +17,7 @@ import { kitMessages } from '../../messaging/kitMessages';
 
 const MESSAGES = kitMessages('testkit');
 const MENU_ID = 'testkit-convert';
-const MENU = { title: 'Convert with Ready SVG', contexts: ['image'] };
+const MENU = { title: 'Convert with Extension Kit', contexts: ['image'] };
 
 const cdnPng = new Blob([new Uint8Array([1, 2, 3])], { type: 'image/png' });
 

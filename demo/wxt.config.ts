@@ -1,6 +1,6 @@
 import { defineConfig } from 'wxt';
 
-// 装配形态照 ready-svg（extension/wxt.config.ts）最小化裁剪——demo 不接真实后端，
+// 装配形态最小化裁剪——demo 不接真实后端，
 // 无 react 模块 / auto-icons；downloads（asset-io）与 cookies（session）留待产品 #2。
 export default defineConfig({
   srcDir: 'src',
