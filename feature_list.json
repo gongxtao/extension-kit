@@ -87,6 +87,14 @@
    "dependencies": ["feat-010"],
    "status": "done",
    "evidence": "2026-09-14 harness 流程全程（登记→TDD→实现→验证→收口）：TDD 视图模型 8 测试红→绿（handoffToView 空态/ready/stale R47 TTL + metadataLabel F24 展示层格式化；纳入根基线 228 tests）；demo compile/build 绿（33.39 kB）；UI 载入后 scripts/demo-smoke.mjs 六断言真机全绿复跑两轮（第二轮 mode 断言 overlay→squeeze 翻转同时证明跨运行持久化）：①扩展加载 ②canvas 造大图→自动挂徽标→点击→抓取+面板直开 R90 ③handoff 落 storage.session（metadata=demo-page+本轮新鲜度防旧记录冒充）④面板渲染 img dataUrl+胶囊+Copy 可见 ⑤首开标记 flag-store ⑥模式切换持久化 panel-prefs；踩坑记录：新扩展载入前已开的页面须 Page.reload 才注入新 content script；冒烟断言不得写死可持久化状态值（读前值断言翻转）；init.sh 三步绿 228 tests + 10 入口对齐"
+  },
+  {
+   "id": "feat-012",
+   "name": "docs: 新产品接入教程（用户指令 2026-09-14）",
+   "description": "docs/onboarding.md 分步接入教程（安装→ns→manifest 能力勾选→kit→background→content→panel 页→/testing 首个单测→验证 checklist→常见坑）+ 修 README 两处陈旧骨架（content 骨架误传 badge 而非 badgeDeps；background 骨架为过时占位注释——教程成文后一并修正并链接）。出口门：教程代码块逐字节组装为 demo/src/snippet-verify/ 后 demo tsc --noEmit 通过（证明教程片段对真实 API 可编译）+ 与 demo（已过真机六断言）逐段对齐 + init.sh 绿",
+   "dependencies": ["feat-011"],
+   "status": "done",
+   "evidence": "2026-09-14 harness 流程全程（登记→成文→编译门→修正→收口）：docs/onboarding.md 九节（前置 .npmrc/ns 一步/manifest 按能力勾选表 F21/background 全文含 R97 lastError 注记/content 全文含 badgeDeps F23·F17/panel 页三段核心逻辑（完整参照 demo）/testing 首个单测示例/构建与真机 checklist（137+ UI 载入与阈值说明）/常见坑速查表七条/接后端指引 §9）；出口门实测：§3/§4 代码块逐段组装为 demo/src/lib/snippet-verify/{background,content}-snippet.ts（唯一差异 = kit 导入路径深一级）→ demo npx tsc --noEmit 通过（SNIPPET_TSC_OK，保留仓内作回归守）；§6 单测代码块组装为 onboarding-tutorial.test.ts 真实入套件（init.sh 229 tests 全绿）；README 修正两处陈旧骨架（content 骨架 badge 实例误传 → badgeDeps 装配面 + 注记勿自传实例；background 占位注释 → 完整骨架 + 指向教程全文）+ 起步路径头部链接教程"
   }
  ]
 }

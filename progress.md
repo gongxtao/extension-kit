@@ -4,9 +4,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-09-14（feat-011 demo 收口，11/11）
-**Active Feature:** 无——框架 10 特性 + demo 端到端验证插件全部收口；下一主题 = 产品 #2 开工（首个真实消费者）
-**主线状态:** 框架 v0.1.0 已发布（GitHub Packages）；demo（ns=demokit）真机六断言全绿复跑两轮；基线 228 测试 + 10 入口
+**Last Updated:** 2026-09-14（feat-012 教程收口，12/12）
+**Active Feature:** 无——框架 10 特性 + demo 端到端验证 + 接入教程全部收口；下一主题 = 产品 #2 开工（首个真实消费者）
+**主线状态:** 框架 v0.1.0 已发布（GitHub Packages）；demo 真机六断言全绿；docs/onboarding.md 接入教程成文（代码块经编译门持续校验）；基线 229 测试 + 10 入口
 
 ## Status
 
@@ -23,6 +23,7 @@
 - [x] **feat-009 /content**（353aba1）：CaptureSource 契约 F26 / imageCapture（sourceOf 随 F17 删）/ badge F23 品牌注入 / runtime+background 矩阵全保留 / §4 分层 eslint 第一刀
 - [x] **feat-010 /testing + 发布**（4f60eab）：假件工厂最小集（零 vitest 依赖）/ Playwright 助手（结构类型）/ README 重写 / release.yml / **0.1.0 出口门实测**（pack→tarball 真装→三入口导入）
 - [x] **feat-011 demo 端到端消费验证插件**（2026-09-14，用户指令「完整校验 + 开发 demo」）——harness 流程全程（登记→TDD→实现→验证→收口）：全量复校（git/feature_list/init.sh 220 tests/release workflow/chrome-smoke EXIT=0）→ demo/（ns=demokit）视图模型 TDD 8 测试纳入根基线 → 三入口全框架装配 → scripts/demo-smoke.mjs 六断言真机全绿复跑两轮（第二轮 mode overlay→squeeze 翻转证明跨运行持久化）；踩坑：新扩展载入前已开的页面须 Page.reload 才注入新 content script；冒烟断言不写死可持久化状态值（读前值断言翻转）
+- [x] **feat-012 新产品接入教程**（2026-09-14，用户指令「更新新应用接入教程」）——harness 流程全程（登记→成文→编译门→修正→收口）：docs/onboarding.md 九节分步教程（前置/ns/manifest 勾选表 F21/两入口全文/panel 页/首个单测/真机 checklist/常见坑七条/接后端指引）；**教程代码块三重验证**——§3/§4 组装为 demo/src/lib/snippet-verify/ 两入口文件 tsc 通过（保留仓内作回归守）、§6 单测真实入套件（229 tests）、与已过真机六断言的 demo 逐段一致；顺带修 README 两处陈旧骨架（badge 实例误传→badgeDeps；background 占位注释→全文+教程链接——实装后骨架未随 API 演进更新的欠账）
 - [x] 远程仓创建首推：github.com/gongxtao/extension-kit（私有，gh 已认证 gongxtao——原 scope 核对项关闭）
 
 ### What's In Progress

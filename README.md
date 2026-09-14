@@ -22,7 +22,9 @@ npm i @gongxtao/extension-kit
 
 ## 新产品起步路径（无脚手架生成器）
 
-新建 WXT 项目 → 装包 → 按 [example/](./example/) 的形态接线（下列骨架可直接复制，`<ns>` 换成产品自己的单段 `[a-z0-9]+` 命名空间）。
+> **完整分步教程见 [docs/onboarding.md](./docs/onboarding.md)**（安装 → ns → manifest 勾选 →
+> 三入口 → panel 页 → 首个单测 → 真机 checklist → 常见坑；代码块经 demo 编译门持续校验）。
+> 下列骨架可直接复制，`<ns>` 换成产品自己的单段 `[a-z0-9]+` 命名空间。
 
 ### 1. manifest 必备声明（缺一项 = 静默故障，F21）
 
@@ -59,15 +61,15 @@ import { defineContentScript } from 'wxt/utils/define-content-script';
 import { browser } from 'wxt/browser';
 import {
   kitMessages, createPanelPrefs, createPanelHost, startContentRuntime,
-  createBadgeOverlay, imageCapture, makeDomCanvas,
-} from '@gongxtao/extension-kit';
+  imageCapture, makeDomCanvas,
+} from '@gongxtao/extension-kit';        // imageCapture/makeDomCanvas/startContentRuntime 亦可用 /content 子路径
 import { kit } from '../lib/kit';
 
 export default defineContentScript({
   matches: ['<all_urls>'],
   runAt: 'document_idle',
   main() {
-    const messages = kitMessages('<ns>');           // kitMessages(kit 派生面的 ns)
+    const messages = kitMessages('<ns>');
     const panelHost = createPanelHost({
       getPanelUrl: () => browser.runtime.getURL('/panel.html'),
       prefs: createPanelPrefs(browser.storage.local, (l) => {
@@ -79,16 +81,6 @@ export default defineContentScript({
       resizeAttr: kit.dataAttr('resize'),
       // ariaLabel / borderStyle 可选（F23：aria 产品注入零缺省；边线通用缺省可覆盖）
     });
-    const badge = createBadgeOverlay({
-      doc: document,
-      badgeAttr: kit.dataAttr('badge'),
-      cssNames: { spin: kit.cssName('spin'), shake: kit.cssName('shake') },
-      ariaLabel: '<产品文案>',                        // F23：注入零缺省
-      fallbackText: '<回退文案>', tooLargeText: '<超限文案>',
-      branding: { badgeColor: '<品牌色>', icons: { logo: '<path…>', lock: '<path…>', check: '<path…>' } },
-      cornerFor: (source) => (source === '<站点值>' ? 'top-right' : 'bottom-right'), // F17
-      source: /* 产品来源值或省略 */,
-    });
     startContentRuntime({
       doc: document,
       runtime: {
@@ -99,8 +91,17 @@ export default defineContentScript({
         },
       },
       captureSource: imageCapture({ makeCanvas: makeDomCanvas }), // F26 抓取源
-      messages, panelHost, badge,
+      messages, panelHost,
       toastAttr: kit.dataAttr('toast'),
+      badgeDeps: {                      // 徽标装配面——runtime 内部组 createBadgeOverlay（勿自传 badge 实例）
+        badgeAttr: kit.dataAttr('badge'),
+        cssNames: { spin: kit.cssName('spin'), shake: kit.cssName('shake') },
+        ariaLabel: '<产品文案>',          // F23：注入零缺省
+        fallbackText: '<回退文案>', tooLargeText: '<超限文案>',
+        branding: { badgeColor: '<品牌色>', icons: { logo: '<path…>', lock: '<path…>', check: '<path…>' } },
+        cornerFor: (source) => (source === '<站点值>' ? 'top-right' : 'bottom-right'), // F17
+        source: /* 产品来源值或省略 */,
+      },
     });
   },
 });
@@ -113,10 +114,32 @@ export default defineContentScript({
 ### 4. background 入口（菜单 / toolbar / handoff 收口 / CDN 兜底）
 
 ```ts
-// src/entrypoints/background/index.ts —— setupPageIntegration(ctx, opts)
-// 完整可编译形态：待 /content 集成时照 ready-svg entrypoints/background 形态接线
-//（ctx = browser 各面结构子集 + createHandoffStore(browser.storage.session, kit.key('image-handoff'))）
+// src/entrypoints/background/index.ts —— setupPageIntegration(ctx, opts)：框架装配面整体进框架
+import { browser } from 'wxt/browser';
+import { kitMessages } from '@gongxtao/extension-kit';
+import {
+  createHandoffStore, imageCapture, makeOffscreenCanvas, setupPageIntegration,
+} from '@gongxtao/extension-kit/content';
+import { kit } from '../lib/kit';
+
+defineBackground(() => setupPageIntegration(
+  {
+    menus: { /* R97：create 错误走回调通道（lastError），照教程抄勿改 try/catch */ },
+    runtime: browser.runtime, action: browser.action, tabs: browser.tabs,
+    handoffStore: createHandoffStore(browser.storage.session, kit.key('image-handoff')),
+  },
+  {
+    messages: kitMessages('<ns>'),
+    captureSource: imageCapture({ makeCanvas: makeOffscreenCanvas }),
+    makeCanvas: makeOffscreenCanvas,
+    menuId: kit.menuId('convert'),                    // F13：缺省派生
+    menu: { title: '<菜单文案>', contexts: ['image'] }, // 产品值注入（F23）
+  },
+));
 ```
+
+（`defineBackground` 从 `wxt/utils/define-background` 导入；menus 接线全文见
+[docs/onboarding.md §3](./docs/onboarding.md)——含 lastError 回调消费的完整写法。）
 
 ### 5. 测试
 
